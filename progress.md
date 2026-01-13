@@ -2,20 +2,21 @@
 
 ## Project: Transparency Lab - Ingredient X-Ray Module
 
-### Overall Status: Iteration 1 of 10
+### Overall Status: Iteration 2 of 10
 
 ---
 
-## Iteration 1: Project Setup
+## Iteration 1: Project Setup - COMPLETED
 - [x] Initialize git repo and connect to GitHub
 - [x] Create Ralph files
-- [ ] Initialize npm project
-- [ ] Install dependencies
-- [ ] Set up configs (Vite, Jest, Playwright)
-- [ ] Create project structure
-- [ ] First commit and push
+- [x] Initialize npm project
+- [x] Install dependencies
+- [x] Set up configs (Vite, Jest, Playwright)
+- [x] Create project structure
+- [x] First commit and push
+- Tests: 8 passing
 
-## Iteration 2: useLongPress Hook
+## Iteration 2: useLongPress Hook - IN PROGRESS
 - [ ] Create custom hook
 - [ ] Touch event handling
 - [ ] Mouse event handling

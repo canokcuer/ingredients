@@ -1,24 +1,31 @@
-# Current Task: Iteration 1 - Project Setup
+# Current Task: Iteration 2 - useLongPress Hook
 
 ## Objective
-Set up the Transparency Lab project structure, dependencies, and configurations.
+Create a custom React hook for detecting press-and-hold gestures on both mobile (touch) and desktop (mouse).
 
 ## Tasks
-- [x] Initialize git repo and connect to GitHub
-- [x] Create Ralph files (ralph_task.md, guardrails.md, progress.md, ralph.sh)
-- [ ] Initialize npm project with package.json
-- [ ] Install dependencies (React, Framer Motion, Tailwind, testing tools)
-- [ ] Set up Vite, Jest, and Playwright configs
-- [ ] Create initial project structure (folders)
-- [ ] First commit and push to GitHub
+- [ ] Create `src/hooks/useLongPress.js` custom hook
+- [ ] Handle touch start/end/move events
+- [ ] Handle mouse down/up events (desktop)
+- [ ] Implement 300ms threshold for "long press" detection
+- [ ] Cancel interaction on scroll intent (touchmove with significant displacement)
+- [ ] Write comprehensive unit tests
+- [ ] Achieve >80% coverage for this module
 
 ## Acceptance Criteria
-- All dependencies installed without errors
-- Project structure matches the plan
-- Jest runs (even with no tests yet)
-- Git repo connected to GitHub
+- Hook returns { isPressed, handlers } object
+- Works on mobile (touch events) and desktop (mouse events)
+- Does NOT block page scrolling
+- Triggers after 300ms hold
+- Cancels if user moves finger/mouse significantly
+- All tests pass with >80% coverage
 
-## Notes
-- Using NPM Build approach (not CDN)
-- Target: 80% test coverage
-- Custom Shopify theme compatibility
+## Technical Notes
+- Use passive event listeners: `{ passive: true }`
+- Movement threshold: ~10px before canceling
+- Must clean up timers on unmount
+
+## Previous Iteration
+Iteration 1 (Project Setup) - COMPLETED
+- 8 tests passing
+- Git repo connected: https://github.com/canokcuer/ingredients.git
