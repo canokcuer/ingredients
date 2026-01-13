@@ -2,7 +2,7 @@
 
 ## Project: Transparency Lab - Ingredient X-Ray Module
 
-### Overall Status: Iteration 2 of 10
+### Overall Status: Iteration 3 of 10
 
 ---
 
@@ -16,12 +16,14 @@
 - [x] First commit and push
 - Tests: 8 passing
 
-## Iteration 2: useLongPress Hook - IN PROGRESS
-- [ ] Create custom hook
-- [ ] Touch event handling
-- [ ] Mouse event handling
-- [ ] Scroll intent detection
-- [ ] Unit tests (>80% coverage)
+## Iteration 2: useLongPress Hook - COMPLETED
+- [x] Create custom hook
+- [x] Touch event handling
+- [x] Mouse event handling
+- [x] Scroll intent detection
+- [x] Unit tests (>80% coverage)
+- Tests: 30 passing
+- Coverage: 98.61% statements, 84.44% branches
 
 ## Iteration 3: IngredientCard Component
 - [ ] Base component

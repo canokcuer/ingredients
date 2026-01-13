@@ -1,31 +1,35 @@
-# Current Task: Iteration 2 - useLongPress Hook
+# Current Task: Iteration 3 - IngredientCard Component
 
 ## Objective
-Create a custom React hook for detecting press-and-hold gestures on both mobile (touch) and desktop (mouse).
+Create the main IngredientCard component with press-and-hold X-Ray interaction.
 
 ## Tasks
-- [ ] Create `src/hooks/useLongPress.js` custom hook
-- [ ] Handle touch start/end/move events
-- [ ] Handle mouse down/up events (desktop)
-- [ ] Implement 300ms threshold for "long press" detection
-- [ ] Cancel interaction on scroll intent (touchmove with significant displacement)
+- [ ] Refactor `IngredientCard.jsx` as a separate component
+- [ ] Integrate `useLongPress` hook for interaction
+- [ ] Implement Default State (image + hero title + fingerprint hint)
+- [ ] Implement X-Ray State (blurred bg + data overlay)
+- [ ] Add image lazy loading
 - [ ] Write comprehensive unit tests
-- [ ] Achieve >80% coverage for this module
+- [ ] Test with Turkish characters
 
 ## Acceptance Criteria
-- Hook returns { isPressed, handlers } object
-- Works on mobile (touch events) and desktop (mouse events)
-- Does NOT block page scrolling
-- Triggers after 300ms hold
-- Cancels if user moves finger/mouse significantly
+- Card displays correctly in both states
+- Press-and-hold triggers X-Ray mode
+- Release returns to default state
+- Images lazy load properly
+- Turkish characters (şğüöçıİ) render correctly
 - All tests pass with >80% coverage
 
-## Technical Notes
-- Use passive event listeners: `{ passive: true }`
-- Movement threshold: ~10px before canceling
-- Must clean up timers on unmount
+## Props
+- image: string (URL)
+- name: string
+- heroTitle: string
+- subtitle: string
+- origin: string
+- activeCompound: string
+- labResult: string
 
-## Previous Iteration
-Iteration 1 (Project Setup) - COMPLETED
-- 8 tests passing
-- Git repo connected: https://github.com/canokcuer/ingredients.git
+## Previous Iterations
+- Iteration 1 (Setup): 8 tests
+- Iteration 2 (useLongPress): 22 tests
+- Total: 30 tests passing
