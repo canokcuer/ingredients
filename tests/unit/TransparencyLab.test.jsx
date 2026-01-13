@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import TransparencyLab from '../../src/components/TransparencyLab';
 
 // Mock framer-motion to avoid animation issues in tests
@@ -19,6 +19,16 @@ jest.mock('framer-motion', () => {
   };
 });
 
+// Helper to set viewport width
+const setViewportWidth = (width) => {
+  Object.defineProperty(window, 'innerWidth', {
+    writable: true,
+    configurable: true,
+    value: width
+  });
+  window.dispatchEvent(new Event('resize'));
+};
+
 describe('TransparencyLab', () => {
   const mockIngredients = [
     {
@@ -35,6 +45,8 @@ describe('TransparencyLab', () => {
 
   beforeEach(() => {
     navigator.vibrate = jest.fn();
+    // Default to desktop viewport
+    setViewportWidth(1024);
   });
 
   it('renders the section', () => {
@@ -104,5 +116,53 @@ describe('TransparencyLab', () => {
 
     render(<TransparencyLab ingredients={multipleIngredients} />);
     expect(screen.getAllByTestId('ingredient-card')).toHaveLength(2);
+  });
+
+  describe('responsive layouts', () => {
+    it('renders grid layout on desktop', () => {
+      setViewportWidth(1024);
+      render(<TransparencyLab ingredients={mockIngredients} />);
+      expect(screen.getByTestId('grid')).toBeInTheDocument();
+      expect(screen.queryByTestId('carousel')).not.toBeInTheDocument();
+    });
+
+    it('renders carousel layout on mobile', () => {
+      setViewportWidth(375);
+      render(<TransparencyLab ingredients={mockIngredients} />);
+      expect(screen.getByTestId('carousel')).toBeInTheDocument();
+      expect(screen.queryByTestId('grid')).not.toBeInTheDocument();
+    });
+
+    it('shows scroll hint on mobile with multiple ingredients', () => {
+      setViewportWidth(375);
+      const multipleIngredients = [
+        { ...mockIngredients[0] },
+        { ...mockIngredients[0], id: 2, name: 'Ashwagandha' }
+      ];
+      render(<TransparencyLab ingredients={multipleIngredients} />);
+      expect(screen.getByText('← Kaydır →')).toBeInTheDocument();
+    });
+
+    it('does not show scroll hint with single ingredient', () => {
+      setViewportWidth(375);
+      render(<TransparencyLab ingredients={mockIngredients} />);
+      expect(screen.queryByText('← Kaydır →')).not.toBeInTheDocument();
+    });
+
+    it('switches layout on resize', () => {
+      const { rerender } = render(<TransparencyLab ingredients={mockIngredients} />);
+
+      // Start at desktop
+      setViewportWidth(1024);
+      rerender(<TransparencyLab ingredients={mockIngredients} />);
+      expect(screen.getByTestId('grid')).toBeInTheDocument();
+
+      // Resize to mobile
+      act(() => {
+        setViewportWidth(375);
+      });
+      rerender(<TransparencyLab ingredients={mockIngredients} />);
+      expect(screen.getByTestId('carousel')).toBeInTheDocument();
+    });
   });
 });

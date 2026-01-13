@@ -1,0 +1,697 @@
+{% comment %}
+  Transparency Lab - Ingredient X-Ray Module
+  An interactive, mobile-first section featuring a "Press & Hold" X-Ray effect
+  that reveals clinical data, origin stories, and lab safety results.
+
+  Usage:
+  1. Add this section to your product page template
+  2. Add ingredient blocks via the Shopify Theme Editor
+  3. Each block represents one ingredient with its scientific data
+{% endcomment %}
+
+{{ 'transparency-lab.css' | asset_url | stylesheet_tag }}
+
+<section
+  class="transparency-lab"
+  id="transparency-lab-{{ section.id }}"
+  data-section-id="{{ section.id }}"
+  data-section-type="transparency-lab"
+>
+  <div class="transparency-lab__container page-width">
+    {% if section.settings.title != blank %}
+      <h2 class="transparency-lab__title">{{ section.settings.title }}</h2>
+    {% endif %}
+
+    {% if section.settings.subtitle != blank %}
+      <p class="transparency-lab__subtitle">{{ section.settings.subtitle }}</p>
+    {% endif %}
+
+    {% if section.blocks.size > 0 %}
+      {%- comment -%} Mobile: Carousel / Desktop: Grid {%- endcomment -%}
+      <div class="transparency-lab__grid" id="transparency-lab-grid-{{ section.id }}">
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'ingredient' %}
+              <div
+                class="ingredient-card"
+                data-block-id="{{ block.id }}"
+                data-ingredient-name="{{ block.settings.name | escape }}"
+                {{ block.shopify_attributes }}
+                role="button"
+                tabindex="0"
+                aria-pressed="false"
+                aria-label="{{ block.settings.hero_title | escape }} - {{ block.settings.subtitle | escape }}. Detayları görmek için basılı tutun."
+              >
+                {%- comment -%} Background Image {%- endcomment -%}
+                {% if block.settings.image != blank %}
+                  <img
+                    src="{{ block.settings.image | image_url: width: 800 }}"
+                    srcset="
+                      {{ block.settings.image | image_url: width: 400 }} 400w,
+                      {{ block.settings.image | image_url: width: 600 }} 600w,
+                      {{ block.settings.image | image_url: width: 800 }} 800w
+                    "
+                    sizes="(max-width: 768px) 80vw, 33vw"
+                    alt="{{ block.settings.name | escape }}"
+                    class="ingredient-card__image"
+                    loading="lazy"
+                    width="400"
+                    height="500"
+                  >
+                {% else %}
+                  <div class="ingredient-card__placeholder">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="3" width="18" height="18" rx="2" />
+                      <circle cx="8.5" cy="8.5" r="1.5" />
+                      <path d="m21 15-5-5L5 21" />
+                    </svg>
+                  </div>
+                {% endif %}
+
+                {%- comment -%} Default State Content {%- endcomment -%}
+                <div class="ingredient-card__content">
+                  <h3 class="ingredient-card__hero-title">
+                    {{ block.settings.hero_title }}
+                  </h3>
+                  {% if block.settings.subtitle != blank %}
+                    <p class="ingredient-card__subtitle">
+                      {{ block.settings.subtitle }}
+                    </p>
+                  {% endif %}
+                </div>
+
+                {%- comment -%} Fingerprint Hint {%- endcomment -%}
+                <div class="ingredient-card__hint" aria-hidden="true">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="fingerprint-icon">
+                    <path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4"/>
+                    <path d="M14 13.12c0 2.38 0 6.38-1 8.88"/>
+                    <path d="M17.29 21.02c.12-.6.43-2.3.5-3.02"/>
+                    <path d="M2 12a10 10 0 0 1 18-6"/>
+                    <path d="M2 16h.01"/>
+                    <path d="M21.8 16c.2-2 .131-5.354 0-6"/>
+                    <path d="M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2"/>
+                    <path d="M8.65 22c.21-.66.45-1.32.57-2"/>
+                    <path d="M9 6.8a6 6 0 0 1 9 5.2c0 .47 0 1.17-.02 2"/>
+                  </svg>
+                </div>
+
+                {%- comment -%} X-Ray Overlay (shown on press) {%- endcomment -%}
+                <div class="xray-overlay" aria-hidden="true">
+                  <div class="xray-overlay__scanner"></div>
+
+                  <h4 class="xray-overlay__name">{{ block.settings.name }}</h4>
+
+                  <div class="xray-overlay__data">
+                    {% if block.settings.origin != blank %}
+                      <div class="xray-overlay__item">
+                        <div class="xray-overlay__icon">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
+                            <circle cx="12" cy="10" r="3"/>
+                          </svg>
+                        </div>
+                        <div>
+                          <span class="xray-overlay__label">KÖKENİ</span>
+                          <span class="xray-overlay__value">{{ block.settings.origin }}</span>
+                        </div>
+                      </div>
+                    {% endif %}
+
+                    {% if block.settings.active_compound != blank %}
+                      <div class="xray-overlay__item">
+                        <div class="xray-overlay__icon">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/>
+                            <path d="M8.5 2h7"/>
+                            <path d="M7 16h10"/>
+                          </svg>
+                        </div>
+                        <div>
+                          <span class="xray-overlay__label">AKTİF BİLEŞEN</span>
+                          <span class="xray-overlay__value">{{ block.settings.active_compound }}</span>
+                        </div>
+                      </div>
+                    {% endif %}
+
+                    {% if block.settings.lab_result != blank %}
+                      <div class="xray-overlay__item">
+                        <div class="xray-overlay__icon xray-overlay__icon--success">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            <path d="m9 12 2 2 4-4"/>
+                          </svg>
+                        </div>
+                        <div>
+                          <span class="xray-overlay__label">LABORATUVAR SONUCU</span>
+                          <span class="xray-overlay__badge">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                              <path d="m9 12 2 2 4-4"/>
+                            </svg>
+                            {{ block.settings.lab_result }}
+                          </span>
+                        </div>
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+          {% endcase %}
+        {% endfor %}
+      </div>
+
+      {%- comment -%} Mobile Scroll Hint {%- endcomment -%}
+      {% if section.blocks.size > 1 %}
+        <div class="transparency-lab__scroll-hint md:hidden">
+          <span>← Kaydır →</span>
+        </div>
+      {% endif %}
+    {% else %}
+      <div class="transparency-lab__empty">
+        <p>{{ 'sections.transparency_lab.empty' | t | default: 'İçerik düzenleyiciden içerik ekleyin.' }}</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  /* Transparency Lab - Inline Critical CSS */
+  #transparency-lab-{{ section.id }} {
+    --tl-amber: {{ section.settings.accent_color }};
+    --tl-overlay: rgba(31, 41, 55, 0.85);
+    --tl-success: #10B981;
+    padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;
+    background: {{ section.settings.background_color }};
+  }
+
+  #transparency-lab-{{ section.id }} .transparency-lab__title {
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    color: {{ section.settings.text_color }};
+  }
+
+  #transparency-lab-{{ section.id }} .transparency-lab__subtitle {
+    text-align: center;
+    color: {{ section.settings.text_color | color_modify: 'alpha', 0.7 }};
+    margin-bottom: 2rem;
+  }
+
+  #transparency-lab-{{ section.id }} .transparency-lab__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 767px) {
+    #transparency-lab-{{ section.id }} .transparency-lab__grid {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      gap: 1rem;
+      padding: 0 1rem;
+      margin: 0 -1rem;
+    }
+
+    #transparency-lab-{{ section.id }} .transparency-lab__grid::-webkit-scrollbar {
+      display: none;
+    }
+
+    #transparency-lab-{{ section.id }} .ingredient-card {
+      flex: 0 0 calc(100vw - 3rem);
+      scroll-snap-align: center;
+    }
+  }
+
+  #transparency-lab-{{ section.id }} .ingredient-card {
+    position: relative;
+    aspect-ratio: 4/5;
+    border-radius: 1rem;
+    overflow: hidden;
+    cursor: pointer;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+    background: #f3f4f6;
+  }
+
+  #transparency-lab-{{ section.id }} .ingredient-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: filter 0.3s ease, transform 0.3s ease;
+  }
+
+  #transparency-lab-{{ section.id }} .ingredient-card.is-pressed .ingredient-card__image {
+    filter: blur(8px) brightness(0.4);
+    transform: scale(1.05);
+  }
+
+  #transparency-lab-{{ section.id }} .ingredient-card__content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1.5rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%);
+    transition: opacity 0.2s ease;
+  }
+
+  #transparency-lab-{{ section.id }} .ingredient-card.is-pressed .ingredient-card__content {
+    opacity: 0;
+  }
+
+  #transparency-lab-{{ section.id }} .ingredient-card__hero-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.25rem;
+  }
+
+  #transparency-lab-{{ section.id }} .ingredient-card__subtitle {
+    font-size: 0.875rem;
+    color: rgba(255,255,255,0.8);
+  }
+
+  #transparency-lab-{{ section.id }} .ingredient-card__hint {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pulse 2s ease-in-out infinite;
+    transition: opacity 0.2s ease;
+  }
+
+  #transparency-lab-{{ section.id }} .ingredient-card.is-pressed .ingredient-card__hint {
+    opacity: 0;
+  }
+
+  #transparency-lab-{{ section.id }} .ingredient-card__hint svg {
+    color: white;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.7; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1); }
+  }
+
+  #transparency-lab-{{ section.id }} .xray-overlay {
+    position: absolute;
+    inset: 0;
+    background: var(--tl-overlay);
+    backdrop-filter: blur(4px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1.5rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+
+  #transparency-lab-{{ section.id }} .ingredient-card.is-pressed .xray-overlay {
+    opacity: 1;
+  }
+
+  #transparency-lab-{{ section.id }} .xray-overlay__scanner {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--tl-amber);
+    box-shadow: 0 0 10px var(--tl-amber), 0 0 20px var(--tl-amber);
+    animation: scan 1.5s linear infinite;
+  }
+
+  @keyframes scan {
+    0% { top: 0; }
+    100% { top: 100%; }
+  }
+
+  #transparency-lab-{{ section.id }} .xray-overlay__name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    animation: fadeIn 0.3s ease forwards;
+  }
+
+  #transparency-lab-{{ section.id }} .xray-overlay__data {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  #transparency-lab-{{ section.id }} .xray-overlay__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    color: white;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: slideUp 0.3s ease forwards;
+  }
+
+  #transparency-lab-{{ section.id }} .xray-overlay__item:nth-child(1) { animation-delay: 0.1s; }
+  #transparency-lab-{{ section.id }} .xray-overlay__item:nth-child(2) { animation-delay: 0.2s; }
+  #transparency-lab-{{ section.id }} .xray-overlay__item:nth-child(3) { animation-delay: 0.3s; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  #transparency-lab-{{ section.id }} .xray-overlay__icon {
+    flex-shrink: 0;
+    color: var(--tl-amber);
+  }
+
+  #transparency-lab-{{ section.id }} .xray-overlay__icon--success {
+    color: var(--tl-success);
+  }
+
+  #transparency-lab-{{ section.id }} .xray-overlay__label {
+    display: block;
+    font-size: 0.625rem;
+    font-family: monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.6);
+  }
+
+  #transparency-lab-{{ section.id }} .xray-overlay__value {
+    font-size: 0.875rem;
+    font-family: monospace;
+  }
+
+  #transparency-lab-{{ section.id }} .xray-overlay__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 9999px;
+    background: rgba(16, 185, 129, 0.2);
+    color: var(--tl-success);
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  #transparency-lab-{{ section.id }} .transparency-lab__scroll-hint {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+    font-size: 0.75rem;
+    color: {{ section.settings.text_color | color_modify: 'alpha', 0.5 }};
+  }
+
+  @media (min-width: 768px) {
+    #transparency-lab-{{ section.id }} .transparency-lab__scroll-hint {
+      display: none;
+    }
+  }
+
+  #transparency-lab-{{ section.id }} .ingredient-card__placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9ca3af;
+  }
+
+  #transparency-lab-{{ section.id }} .transparency-lab__empty {
+    text-align: center;
+    padding: 3rem;
+    color: {{ section.settings.text_color | color_modify: 'alpha', 0.5 }};
+  }
+</style>
+
+<script>
+  (function() {
+    const section = document.getElementById('transparency-lab-{{ section.id }}');
+    if (!section) return;
+
+    const cards = section.querySelectorAll('.ingredient-card');
+    const LONG_PRESS_THRESHOLD = 300;
+    const MOVE_THRESHOLD = 10;
+
+    cards.forEach(card => {
+      let timer = null;
+      let startPos = { x: 0, y: 0 };
+      let isLongPress = false;
+
+      const start = (e) => {
+        const pos = getPosition(e);
+        startPos = pos;
+        isLongPress = false;
+
+        timer = setTimeout(() => {
+          isLongPress = true;
+          card.classList.add('is-pressed');
+          card.setAttribute('aria-pressed', 'true');
+
+          // Haptic feedback
+          if (navigator.vibrate) {
+            navigator.vibrate(50);
+          }
+        }, LONG_PRESS_THRESHOLD);
+      };
+
+      const end = () => {
+        if (timer) {
+          clearTimeout(timer);
+          timer = null;
+        }
+
+        if (isLongPress) {
+          card.classList.remove('is-pressed');
+          card.setAttribute('aria-pressed', 'false');
+        }
+
+        isLongPress = false;
+      };
+
+      const move = (e) => {
+        if (!timer && !isLongPress) return;
+
+        const pos = getPosition(e);
+        const deltaX = Math.abs(pos.x - startPos.x);
+        const deltaY = Math.abs(pos.y - startPos.y);
+
+        if (deltaX > MOVE_THRESHOLD || deltaY > MOVE_THRESHOLD) {
+          end();
+        }
+      };
+
+      const getPosition = (e) => {
+        if (e.touches && e.touches[0]) {
+          return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        }
+        return { x: e.clientX || 0, y: e.clientY || 0 };
+      };
+
+      // Touch events
+      card.addEventListener('touchstart', start, { passive: true });
+      card.addEventListener('touchend', end, { passive: true });
+      card.addEventListener('touchmove', move, { passive: true });
+      card.addEventListener('touchcancel', end, { passive: true });
+
+      // Mouse events
+      card.addEventListener('mousedown', (e) => {
+        if (e.button === 0) start(e);
+      });
+      card.addEventListener('mouseup', end);
+      card.addEventListener('mousemove', move);
+      card.addEventListener('mouseleave', end);
+
+      // Keyboard support
+      card.addEventListener('keydown', (e) => {
+        if (e.key === ' ' || e.key === 'Enter') {
+          e.preventDefault();
+          if (!isLongPress) {
+            card.classList.add('is-pressed');
+            card.setAttribute('aria-pressed', 'true');
+            isLongPress = true;
+          } else {
+            card.classList.remove('is-pressed');
+            card.setAttribute('aria-pressed', 'false');
+            isLongPress = false;
+          }
+        }
+      });
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Transparency Lab",
+  "tag": "section",
+  "class": "section-transparency-lab",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Bilimin Doğayla Buluştuğu Nokta"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "İçeriklerimizi keşfedin - basılı tutarak inceleyin"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#D97706"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#1f2937"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    }
+  ],
+  "blocks": [
+    {
+      "type": "ingredient",
+      "name": "Ingredient",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Ingredient Name",
+          "default": "Rhodiola Rosea"
+        },
+        {
+          "type": "text",
+          "id": "hero_title",
+          "label": "Hero Title",
+          "info": "The main display title (e.g., 'Stres Kalkanı')",
+          "default": "Stres Kalkanı"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitle",
+          "default": "Sibirya'nın Altın Kökü"
+        },
+        {
+          "type": "text",
+          "id": "origin",
+          "label": "Origin",
+          "info": "Where the ingredient comes from",
+          "default": "Sibirya"
+        },
+        {
+          "type": "text",
+          "id": "active_compound",
+          "label": "Active Compound",
+          "info": "Key active ingredients (e.g., '%3 Rosavins')",
+          "default": "%3 Rosavins"
+        },
+        {
+          "type": "text",
+          "id": "lab_result",
+          "label": "Lab Result",
+          "info": "Safety certification text",
+          "default": "GEÇTİ - Ağır Metal Yok"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Transparency Lab",
+      "blocks": [
+        {
+          "type": "ingredient",
+          "settings": {
+            "name": "Rhodiola Rosea",
+            "hero_title": "Stres Kalkanı",
+            "subtitle": "Sibirya'nın Altın Kökü",
+            "origin": "Sibirya",
+            "active_compound": "%3 Rosavins",
+            "lab_result": "GEÇTİ - Ağır Metal Yok"
+          }
+        },
+        {
+          "type": "ingredient",
+          "settings": {
+            "name": "Ashwagandha",
+            "hero_title": "Adaptojenik Güç",
+            "subtitle": "Hint Ginsengi",
+            "origin": "Hindistan",
+            "active_compound": "%5 Withanolides",
+            "lab_result": "GEÇTİ - Saflık Onaylı"
+          }
+        },
+        {
+          "type": "ingredient",
+          "settings": {
+            "name": "Marine Collagen",
+            "hero_title": "Cilt Yenileyici",
+            "subtitle": "Okyanus Peptitleri",
+            "origin": "Kuzey Atlantik",
+            "active_compound": "Tip I & III Kolajen",
+            "lab_result": "GEÇTİ - Sürdürülebilir Kaynak"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

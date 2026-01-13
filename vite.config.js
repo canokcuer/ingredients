@@ -5,7 +5,7 @@ export default defineConfig({
   plugins: [react()],
   build: {
     lib: {
-      entry: 'src/index.js',
+      entry: 'src/index.jsx',
       name: 'TransparencyLab',
       fileName: (format) => `transparency-lab.${format}.js`,
       formats: ['iife']
@@ -17,7 +17,7 @@ export default defineConfig({
       }
     },
     outDir: 'dist',
-    minify: 'terser',
+    minify: 'esbuild',
     sourcemap: false
   },
   server: {

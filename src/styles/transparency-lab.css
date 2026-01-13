@@ -4,7 +4,7 @@
 
 /* Transparency Lab - Base Styles */
 .transparency-lab {
-  @apply w-full py-12 px-4;
+  @apply w-full py-12 px-4 max-w-7xl mx-auto;
   font-family: 'Inter', system-ui, sans-serif;
 }
 
@@ -15,6 +15,7 @@
 /* Carousel Container - Mobile */
 .transparency-lab__carousel {
   @apply flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4;
+  @apply -mx-4 px-4; /* Full bleed on mobile */
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
@@ -26,10 +27,13 @@
 }
 
 /* Grid Container - Desktop */
-@media (min-width: 768px) {
-  .transparency-lab__grid {
-    @apply grid grid-cols-3 gap-6;
-  }
+.transparency-lab__grid {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+}
+
+/* Scroll Hint */
+.transparency-lab__scroll-hint {
+  @apply flex justify-center mt-4;
 }
 
 /* Ingredient Card */
