@@ -1,0 +1,143 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Transparency Lab - Base Styles */
+.transparency-lab {
+  @apply w-full py-12 px-4;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.transparency-lab__title {
+  @apply text-2xl md:text-3xl font-bold text-center mb-8 text-gray-800;
+}
+
+/* Carousel Container - Mobile */
+.transparency-lab__carousel {
+  @apply flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.transparency-lab__carousel::-webkit-scrollbar {
+  display: none;
+}
+
+/* Grid Container - Desktop */
+@media (min-width: 768px) {
+  .transparency-lab__grid {
+    @apply grid grid-cols-3 gap-6;
+  }
+}
+
+/* Ingredient Card */
+.ingredient-card {
+  @apply relative flex-shrink-0 w-72 md:w-full aspect-[4/5] rounded-2xl overflow-hidden cursor-pointer;
+  @apply bg-gray-100 snap-center;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.ingredient-card__image {
+  @apply w-full h-full object-cover transition-all duration-300;
+}
+
+.ingredient-card--pressed .ingredient-card__image {
+  @apply blur-sm scale-105;
+  filter: blur(8px) brightness(0.4);
+}
+
+/* Card Content Overlay */
+.ingredient-card__content {
+  @apply absolute inset-0 flex flex-col justify-end p-6;
+  background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%);
+}
+
+.ingredient-card__hero-title {
+  @apply text-2xl font-bold text-white mb-1;
+}
+
+.ingredient-card__subtitle {
+  @apply text-sm text-gray-200;
+}
+
+/* Fingerprint Hint */
+.ingredient-card__hint {
+  @apply absolute top-4 right-4 w-10 h-10 rounded-full;
+  @apply flex items-center justify-center;
+  @apply bg-white/20 backdrop-blur-sm;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* X-Ray Overlay */
+.xray-overlay {
+  @apply absolute inset-0 flex flex-col justify-center items-center p-6;
+  @apply bg-dark-overlay backdrop-blur-sm;
+  @apply opacity-0 pointer-events-none transition-opacity duration-200;
+}
+
+.ingredient-card--pressed .xray-overlay {
+  @apply opacity-100;
+}
+
+/* Scanner Line */
+.xray-overlay__scanner {
+  @apply absolute left-0 right-0 h-0.5 bg-amber-500;
+  box-shadow: 0 0 10px #D97706, 0 0 20px #D97706;
+  animation: scan 1.5s linear infinite;
+}
+
+@keyframes scan {
+  0% { top: 0; }
+  100% { top: 100%; }
+}
+
+/* Data Points */
+.xray-overlay__data {
+  @apply w-full space-y-4;
+}
+
+.xray-overlay__item {
+  @apply flex items-center gap-3 text-white;
+  @apply opacity-0 transform translate-y-2;
+  animation: slideUp 0.3s ease-out forwards;
+}
+
+.xray-overlay__item:nth-child(1) { animation-delay: 0.1s; }
+.xray-overlay__item:nth-child(2) { animation-delay: 0.2s; }
+.xray-overlay__item:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes slideUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.xray-overlay__label {
+  @apply text-xs font-mono uppercase tracking-wider text-gray-400;
+}
+
+.xray-overlay__value {
+  @apply text-sm font-mono text-white;
+}
+
+/* Lab Status Badge */
+.xray-overlay__badge {
+  @apply inline-flex items-center gap-1 px-2 py-1 rounded-full;
+  @apply bg-success/20 text-success text-xs font-medium;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+  .transparency-lab__carousel {
+    @apply -mx-4 px-4;
+  }
+
+  .ingredient-card {
+    @apply w-[calc(100vw-3rem)];
+  }
+}
