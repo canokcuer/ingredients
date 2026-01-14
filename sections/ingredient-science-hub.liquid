@@ -1,23 +1,18 @@
 {% comment %}
-  Ingredient Science Hub
-  A comprehensive ingredient information section with tabs for:
-  - Faydalar (Benefits)
-  - Makaleler (Scientific Articles)
-  - Test Sonuçları (Lab Results)
-
-  Features:
-  - Premium glass-morphism test result cards
-  - Animated progress bars
-  - Staggered fade-in animations
-  - Responsive vertical layout
+  Ingredient Science Hub v2
+  - Image/name at TOP of card
+  - Black, white, gold (#D4AF37) color scheme
+  - Mobile: Horizontal carousel with peek effect
+  - Desktop: Grid layout
 {% endcomment %}
 
 <section
   class="ingredient-hub"
   id="ingredient-hub-{{ section.id }}"
   data-section-id="{{ section.id }}"
+  data-card-count="{{ section.blocks.size }}"
 >
-  <div class="ingredient-hub__container page-width">
+  <div class="ingredient-hub__container">
     {% if section.settings.title != blank %}
       <h2 class="ingredient-hub__title">{{ section.settings.title }}</h2>
     {% endif %}
@@ -27,15 +22,45 @@
     {% endif %}
 
     {% if section.blocks.size > 0 %}
-      <div class="ingredient-hub__grid">
+      <div class="ingredient-hub__carousel">
         {% for block in section.blocks %}
           {% case block.type %}
             {% when 'ingredient' %}
               <article
                 class="ingredient-card"
                 data-block-id="{{ block.id }}"
+                data-index="{{ forloop.index0 }}"
                 {{ block.shopify_attributes }}
               >
+                {%- comment -%} Ingredient Header (Image & Info) - NOW AT TOP {%- endcomment -%}
+                <div class="ingredient-card__header">
+                  {% if block.settings.image != blank %}
+                    <div class="ingredient-card__image-wrapper">
+                      <img
+                        src="{{ block.settings.image | image_url: width: 400 }}"
+                        srcset="
+                          {{ block.settings.image | image_url: width: 200 }} 200w,
+                          {{ block.settings.image | image_url: width: 300 }} 300w,
+                          {{ block.settings.image | image_url: width: 400 }} 400w
+                        "
+                        sizes="(max-width: 768px) 120px, 140px"
+                        alt="{{ block.settings.name | escape }}"
+                        class="ingredient-card__image"
+                        loading="lazy"
+                        width="140"
+                        height="140"
+                      >
+                    </div>
+                  {% endif %}
+
+                  <div class="ingredient-card__info">
+                    <h3 class="ingredient-card__name">{{ block.settings.name }}</h3>
+                    {% if block.settings.tagline != blank %}
+                      <p class="ingredient-card__tagline">{{ block.settings.tagline }}</p>
+                    {% endif %}
+                  </div>
+                </div>
+
                 {%- comment -%} Tab Navigation {%- endcomment -%}
                 <nav class="ingredient-card__tabs" role="tablist">
                   <button
@@ -62,7 +87,6 @@
                       <polyline points="14,2 14,8 20,8"/>
                       <line x1="16" y1="13" x2="8" y2="13"/>
                       <line x1="16" y1="17" x2="8" y2="17"/>
-                      <line x1="10" y1="9" x2="8" y2="9"/>
                     </svg>
                     <span>Makaleler</span>
                   </button>
@@ -160,7 +184,7 @@
                     </div>
                   </div>
 
-                  {%- comment -%} Test Results Tab (PREMIUM Design) {%- endcomment -%}
+                  {%- comment -%} Test Results Tab {%- endcomment -%}
                   <div
                     class="tab-panel"
                     role="tabpanel"
@@ -238,39 +262,23 @@
                     </div>
                   </div>
                 </div>
-
-                {%- comment -%} Ingredient Image & Info {%- endcomment -%}
-                <div class="ingredient-card__footer">
-                  {% if block.settings.image != blank %}
-                    <div class="ingredient-card__image-wrapper">
-                      <img
-                        src="{{ block.settings.image | image_url: width: 400 }}"
-                        srcset="
-                          {{ block.settings.image | image_url: width: 200 }} 200w,
-                          {{ block.settings.image | image_url: width: 300 }} 300w,
-                          {{ block.settings.image | image_url: width: 400 }} 400w
-                        "
-                        sizes="(max-width: 768px) 150px, 200px"
-                        alt="{{ block.settings.name | escape }}"
-                        class="ingredient-card__image"
-                        loading="lazy"
-                        width="200"
-                        height="200"
-                      >
-                    </div>
-                  {% endif %}
-
-                  <div class="ingredient-card__info">
-                    <h3 class="ingredient-card__name">{{ block.settings.name }}</h3>
-                    {% if block.settings.tagline != blank %}
-                      <p class="ingredient-card__tagline">{{ block.settings.tagline }}</p>
-                    {% endif %}
-                  </div>
-                </div>
               </article>
           {% endcase %}
         {% endfor %}
       </div>
+
+      {%- comment -%} Carousel Dot Indicators (Mobile Only) {%- endcomment -%}
+      {% if section.blocks.size > 1 %}
+        <div class="carousel-dots">
+          {% for block in section.blocks %}
+            <button
+              class="carousel-dot {% if forloop.first %}is-active{% endif %}"
+              data-index="{{ forloop.index0 }}"
+              aria-label="İçerik {{ forloop.index }}"
+            ></button>
+          {% endfor %}
+        </div>
+      {% endif %}
     {% else %}
       <div class="ingredient-hub__empty">
         <p>İçerik düzenleyiciden içerik ekleyin.</p>
@@ -281,25 +289,31 @@
 
 <style>
   /* ============================================
-     INGREDIENT SCIENCE HUB - PREMIUM STYLES
+     INGREDIENT SCIENCE HUB v2 - GOLD/BLACK/WHITE
      ============================================ */
 
   #ingredient-hub-{{ section.id }} {
-    --hub-accent: {{ section.settings.accent_color }};
-    --hub-accent-light: {{ section.settings.accent_color | color_modify: 'alpha', 0.1 }};
-    --hub-accent-glow: {{ section.settings.accent_color | color_modify: 'alpha', 0.3 }};
+    /* Gold Color Scheme */
+    --hub-gold: #D4AF37;
+    --hub-gold-light: rgba(212, 175, 55, 0.1);
+    --hub-gold-medium: rgba(212, 175, 55, 0.2);
+    --hub-gold-glow: rgba(212, 175, 55, 0.4);
+
+    /* Black & White */
+    --hub-black: #000000;
+    --hub-white: #FFFFFF;
+    --hub-text: #000000;
+    --hub-text-muted: rgba(0, 0, 0, 0.5);
     --hub-bg: {{ section.settings.background_color }};
-    --hub-text: {{ section.settings.text_color }};
-    --hub-text-muted: {{ section.settings.text_color | color_modify: 'alpha', 0.6 }};
-    --hub-pass: #10B981;
-    --hub-pass-light: rgba(16, 185, 129, 0.1);
-    --hub-pass-glow: rgba(16, 185, 129, 0.3);
-    --hub-card-bg: #ffffff;
-    --hub-border: rgba(0, 0, 0, 0.08);
+    --hub-card-bg: #FFFFFF;
+    --hub-border: rgba(212, 175, 55, 0.2);
+
+    /* Standardized Typography */
+    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
     padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;
     background: var(--hub-bg);
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: var(--font-family);
   }
 
   .ingredient-hub__container {
@@ -309,6 +323,7 @@
   }
 
   .ingredient-hub__title {
+    font-family: var(--font-family);
     font-size: clamp(1.75rem, 4vw, 2.5rem);
     font-weight: 700;
     text-align: center;
@@ -317,22 +332,56 @@
   }
 
   .ingredient-hub__subtitle {
+    font-family: var(--font-family);
     text-align: center;
     color: var(--hub-text-muted);
     font-size: 1.1rem;
-    margin-bottom: 3rem;
+    font-weight: 400;
+    margin-bottom: 2.5rem;
   }
 
-  /* Grid Layout */
-  .ingredient-hub__grid {
+  /* ============================================
+     CAROUSEL CONTAINER
+     ============================================ */
+
+  .ingredient-hub__carousel {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 2rem;
   }
 
-  @media (max-width: 400px) {
-    .ingredient-hub__grid {
-      grid-template-columns: 1fr;
+  /* Mobile: Horizontal Carousel with Peek */
+  @media (max-width: 767px) {
+    .ingredient-hub__container {
+      padding: 0;
+    }
+
+    .ingredient-hub__title,
+    .ingredient-hub__subtitle {
+      padding: 0 1rem;
+    }
+
+    .ingredient-hub__carousel {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      gap: 1rem;
+      /* Center first card with padding for peek effect */
+      padding-left: calc(50% - 145px);
+      padding-right: calc(50% - 145px);
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .ingredient-hub__carousel::-webkit-scrollbar {
+      display: none;
+    }
+
+    .ingredient-card {
+      flex: 0 0 290px;
+      scroll-snap-align: center;
     }
   }
 
@@ -342,431 +391,43 @@
 
   .ingredient-card {
     background: var(--hub-card-bg);
-    border-radius: 1.5rem;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+    border-radius: 1.25rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     border: 1px solid var(--hub-border);
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
 
-  .ingredient-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+  @media (min-width: 768px) {
+    .ingredient-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+    }
   }
 
   /* ============================================
-     TAB NAVIGATION
+     CARD HEADER (Image & Info) - NOW AT TOP
      ============================================ */
 
-  .ingredient-card__tabs {
+  .ingredient-card__header {
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem 1.5rem 1rem;
+    text-align: center;
+    background: linear-gradient(180deg, #FAFAFA 0%, #FFFFFF 100%);
     border-bottom: 1px solid var(--hub-border);
-    background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
-  }
-
-  .ingredient-card__tab {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 1rem 0.5rem;
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: var(--hub-text-muted);
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    position: relative;
-  }
-
-  .ingredient-card__tab svg {
-    flex-shrink: 0;
-  }
-
-  .ingredient-card__tab:hover {
-    color: var(--hub-text);
-    background: var(--hub-accent-light);
-  }
-
-  .ingredient-card__tab.is-active {
-    color: var(--hub-accent);
-  }
-
-  .ingredient-card__tab.is-active::after {
-    content: '';
-    position: absolute;
-    bottom: -1px;
-    left: 10%;
-    right: 10%;
-    height: 3px;
-    background: var(--hub-accent);
-    border-radius: 3px 3px 0 0;
-  }
-
-  @media (max-width: 480px) {
-    .ingredient-card__tab span {
-      font-size: 0.7rem;
-    }
-
-    .ingredient-card__tab svg {
-      width: 14px;
-      height: 14px;
-    }
-  }
-
-  /* ============================================
-     TAB CONTENT
-     ============================================ */
-
-  .ingredient-card__content {
-    min-height: 280px;
-    padding: 1.5rem;
-  }
-
-  .tab-panel {
-    display: none;
-    animation: fadeIn 0.3s ease;
-  }
-
-  .tab-panel.is-active {
-    display: block;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* ============================================
-     BENEFITS TAB
-     ============================================ */
-
-  .benefits-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .benefit-item {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.875rem 1rem;
-    background: linear-gradient(135deg, var(--hub-pass-light) 0%, rgba(16, 185, 129, 0.05) 100%);
-    border-radius: 0.75rem;
-    border-left: 3px solid var(--hub-pass);
-    opacity: 0;
-    animation: slideInBenefit 0.4s ease forwards;
-  }
-
-  @keyframes slideInBenefit {
-    from { opacity: 0; transform: translateX(-10px); }
-    to { opacity: 1; transform: translateX(0); }
-  }
-
-  .benefit-item__icon {
-    flex-shrink: 0;
-    color: var(--hub-pass);
-  }
-
-  .benefit-item__text {
-    font-size: 0.95rem;
-    color: var(--hub-text);
-    font-weight: 500;
-  }
-
-  /* ============================================
-     ARTICLES TAB
-     ============================================ */
-
-  .articles-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .article-card {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem;
-    background: #f8f9fa;
-    border-radius: 0.75rem;
-    text-decoration: none;
-    color: inherit;
-    transition: all 0.2s ease;
-    opacity: 0;
-    animation: slideUpArticle 0.4s ease forwards;
-  }
-
-  @keyframes slideUpArticle {
-    from { opacity: 0; transform: translateY(15px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .article-card:hover {
-    background: #f0f1f3;
-    transform: translateX(4px);
-  }
-
-  .article-card__icon {
-    flex-shrink: 0;
-    width: 48px;
-    height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--hub-accent-light);
-    border-radius: 0.5rem;
-    color: var(--hub-accent);
-  }
-
-  .article-card__content {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .article-card__title {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--hub-text);
-    margin: 0 0 0.25rem 0;
-    line-height: 1.3;
-  }
-
-  .article-card__source {
-    font-size: 0.75rem;
-    color: var(--hub-text-muted);
-  }
-
-  .article-card__arrow {
-    flex-shrink: 0;
-    color: var(--hub-text-muted);
-    transition: transform 0.2s ease;
-  }
-
-  .article-card:hover .article-card__arrow {
-    transform: translate(2px, -2px);
-    color: var(--hub-accent);
-  }
-
-  .empty-state {
-    text-align: center;
-    color: var(--hub-text-muted);
-    padding: 2rem;
-    font-style: italic;
-  }
-
-  /* ============================================
-     TEST RESULTS TAB (PREMIUM DESIGN)
-     ============================================ */
-
-  .test-results {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-
-  .test-cards-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-  }
-
-  @media (max-width: 400px) {
-    .test-cards-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  /* Premium Glass-Morphism Test Card */
-  .test-card {
-    background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.8);
-    border-radius: 1rem;
-    padding: 1rem;
-    box-shadow:
-      0 4px 16px rgba(0, 0, 0, 0.04),
-      inset 0 1px 0 rgba(255,255,255,0.8);
-    opacity: 0;
-    animation: popInCard 0.5s ease forwards;
-    transition: all 0.3s ease;
-  }
-
-  @keyframes popInCard {
-    0% { opacity: 0; transform: scale(0.9); }
-    70% { transform: scale(1.02); }
-    100% { opacity: 1; transform: scale(1); }
-  }
-
-  .test-card:hover {
-    transform: translateY(-2px);
-    box-shadow:
-      0 8px 24px rgba(0, 0, 0, 0.08),
-      inset 0 1px 0 rgba(255,255,255,0.8),
-      0 0 0 1px var(--hub-accent-glow);
-  }
-
-  .test-card__header {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .test-card__indicator {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--hub-pass);
-    box-shadow: 0 0 8px var(--hub-pass-glow);
-    animation: pulse 2s ease-in-out infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-  }
-
-  .test-card__name {
-    font-size: 0.7rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--hub-text-muted);
-    margin: 0;
-  }
-
-  .test-card__status {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .test-card__check {
-    color: var(--hub-pass);
-    animation: checkPop 0.6s ease forwards;
-    animation-delay: inherit;
-  }
-
-  @keyframes checkPop {
-    0% { transform: scale(0); opacity: 0; }
-    50% { transform: scale(1.2); }
-    100% { transform: scale(1); opacity: 1; }
-  }
-
-  .test-card__result {
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--hub-text);
-  }
-
-  .test-card__result--pass {
-    color: var(--hub-pass);
-  }
-
-  /* Animated Progress Bar */
-  .test-card__progress {
-    height: 6px;
-    background: rgba(0, 0, 0, 0.06);
-    border-radius: 3px;
-    overflow: hidden;
-    margin-bottom: 0.5rem;
-  }
-
-  .test-card__progress-bar {
-    height: 100%;
-    width: 0;
-    background: linear-gradient(90deg, var(--hub-accent) 0%, var(--hub-pass) 100%);
-    border-radius: 3px;
-    animation: fillProgress 1s ease forwards;
-    animation-delay: 0.3s;
-  }
-
-  @keyframes fillProgress {
-    to { width: var(--progress, 100%); }
-  }
-
-  .test-card__percent {
-    text-align: center;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--hub-text-muted);
-    font-family: 'JetBrains Mono', monospace;
-  }
-
-  /* Certification Footer */
-  .test-results__footer {
-    display: flex;
-    justify-content: center;
-    gap: 1.5rem;
-    flex-wrap: wrap;
-    padding-top: 0.5rem;
-    border-top: 1px solid var(--hub-border);
-  }
-
-  .certification-badge,
-  .test-date {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.8rem;
-    color: var(--hub-text-muted);
-  }
-
-  .certification-badge svg {
-    color: var(--hub-accent);
-  }
-
-  .certification-badge span {
-    font-weight: 600;
-    color: var(--hub-accent);
-  }
-
-  /* Contact Note */
-  .test-results__note {
-    font-size: 0.75rem;
-    color: var(--hub-text-muted);
-    text-align: center;
-    padding: 0.75rem;
-    background: #f8f9fa;
-    border-radius: 0.5rem;
-  }
-
-  .test-results__note span {
-    color: var(--hub-accent);
-  }
-
-  .test-results__note strong {
-    color: var(--hub-text);
-  }
-
-  /* ============================================
-     INGREDIENT FOOTER (Image & Info)
-     ============================================ */
-
-  .ingredient-card__footer {
-    display: flex;
-    align-items: center;
-    gap: 1.25rem;
-    padding: 1.5rem;
-    background: linear-gradient(180deg, #f8f9fa 0%, #f0f1f3 100%);
-    border-top: 1px solid var(--hub-border);
   }
 
   .ingredient-card__image-wrapper {
-    flex-shrink: 0;
-    width: 80px;
-    height: 80px;
-    border-radius: 1rem;
+    width: 100px;
+    height: 100px;
+    margin-bottom: 0.75rem;
+    border-radius: 50%;
     overflow: hidden;
-    background: #fff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    background: var(--hub-white);
+    box-shadow: 0 4px 16px rgba(212, 175, 55, 0.2);
+    border: 2px solid var(--hub-gold-medium);
   }
 
   .ingredient-card__image {
@@ -781,28 +442,462 @@
   }
 
   .ingredient-card__info {
-    flex: 1;
+    text-align: center;
   }
 
   .ingredient-card__name {
-    font-size: 1.1rem;
+    font-family: var(--font-family);
+    font-size: 1.25rem;
     font-weight: 700;
     color: var(--hub-text);
     margin: 0 0 0.25rem 0;
   }
 
   .ingredient-card__tagline {
-    font-size: 0.85rem;
-    color: var(--hub-accent);
+    font-family: var(--font-family);
+    font-size: 0.9rem;
+    color: var(--hub-gold);
     margin: 0;
+    font-weight: 600;
+  }
+
+  /* ============================================
+     TAB NAVIGATION
+     ============================================ */
+
+  .ingredient-card__tabs {
+    display: flex;
+    border-bottom: 1px solid var(--hub-border);
+    background: var(--hub-white);
+  }
+
+  .ingredient-card__tab {
+    font-family: var(--font-family);
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.875rem 0.5rem;
+    font-size: 0.75rem;
     font-weight: 500;
+    color: var(--hub-text-muted);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+
+  .ingredient-card__tab svg {
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+  }
+
+  .ingredient-card__tab:hover {
+    color: var(--hub-text);
+    background: var(--hub-gold-light);
+  }
+
+  .ingredient-card__tab.is-active {
+    color: var(--hub-gold);
+  }
+
+  .ingredient-card__tab.is-active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 15%;
+    right: 15%;
+    height: 2px;
+    background: var(--hub-gold);
+    border-radius: 2px 2px 0 0;
+  }
+
+  /* ============================================
+     TAB CONTENT
+     ============================================ */
+
+  .ingredient-card__content {
+    min-height: 260px;
+    padding: 1.25rem;
+  }
+
+  .tab-panel {
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .tab-panel.is-active {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ============================================
+     BENEFITS TAB
+     ============================================ */
+
+  .benefits-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+
+  .benefit-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: var(--hub-gold-light);
+    border-radius: 0.625rem;
+    border-left: 3px solid var(--hub-gold);
+    opacity: 0;
+    animation: slideInBenefit 0.4s ease forwards;
+  }
+
+  @keyframes slideInBenefit {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .benefit-item__icon {
+    flex-shrink: 0;
+    color: var(--hub-gold);
+  }
+
+  .benefit-item__text {
+    font-family: var(--font-family);
+    font-size: 0.9rem;
+    color: var(--hub-text);
+    font-weight: 500;
+  }
+
+  /* ============================================
+     ARTICLES TAB
+     ============================================ */
+
+  .articles-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .article-card {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    padding: 0.875rem;
+    background: #F8F8F8;
+    border-radius: 0.625rem;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s ease;
+    opacity: 0;
+    animation: slideUpArticle 0.4s ease forwards;
+  }
+
+  @keyframes slideUpArticle {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .article-card:hover {
+    background: #F0F0F0;
+    transform: translateX(4px);
+  }
+
+  .article-card__icon {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--hub-gold-light);
+    border-radius: 0.5rem;
+    color: var(--hub-gold);
+  }
+
+  .article-card__content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .article-card__title {
+    font-family: var(--font-family);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--hub-text);
+    margin: 0 0 0.2rem 0;
+    line-height: 1.3;
+  }
+
+  .article-card__source {
+    font-family: var(--font-family);
+    font-size: 0.7rem;
+    color: var(--hub-text-muted);
+    font-weight: 400;
+  }
+
+  .article-card__arrow {
+    flex-shrink: 0;
+    color: var(--hub-text-muted);
+    transition: all 0.2s ease;
+  }
+
+  .article-card:hover .article-card__arrow {
+    transform: translate(2px, -2px);
+    color: var(--hub-gold);
+  }
+
+  .empty-state {
+    font-family: var(--font-family);
+    text-align: center;
+    color: var(--hub-text-muted);
+    padding: 2rem;
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  /* ============================================
+     TEST RESULTS TAB
+     ============================================ */
+
+  .test-results {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .test-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  @media (max-width: 400px) {
+    .test-cards-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Premium Glass-Morphism Test Card */
+  .test-card {
+    background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(250,250,250,0.9) 100%);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--hub-gold-medium);
+    border-radius: 0.875rem;
+    padding: 0.875rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    opacity: 0;
+    animation: popInCard 0.5s ease forwards;
+    transition: all 0.3s ease;
+  }
+
+  @keyframes popInCard {
+    0% { opacity: 0; transform: scale(0.9); }
+    70% { transform: scale(1.02); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  .test-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(212, 175, 55, 0.15);
+    border-color: var(--hub-gold);
+  }
+
+  .test-card__header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.625rem;
+  }
+
+  .test-card__indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--hub-gold);
+    box-shadow: 0 0 8px var(--hub-gold-glow);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .test-card__name {
+    font-family: var(--font-family);
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--hub-text-muted);
+    margin: 0;
+  }
+
+  .test-card__status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    margin-bottom: 0.625rem;
+  }
+
+  .test-card__check {
+    color: var(--hub-gold);
+    animation: checkPop 0.6s ease forwards;
+  }
+
+  @keyframes checkPop {
+    0% { transform: scale(0); opacity: 0; }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .test-card__result {
+    font-family: var(--font-family);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--hub-text);
+  }
+
+  .test-card__result--pass {
+    color: var(--hub-gold);
+  }
+
+  /* Animated Progress Bar */
+  .test-card__progress {
+    height: 5px;
+    background: rgba(0, 0, 0, 0.06);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 0.4rem;
+  }
+
+  .test-card__progress-bar {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, var(--hub-gold) 0%, #E5C158 100%);
+    border-radius: 3px;
+    animation: fillProgress 1s ease forwards;
+    animation-delay: 0.3s;
+  }
+
+  @keyframes fillProgress {
+    to { width: var(--progress, 100%); }
+  }
+
+  .test-card__percent {
+    font-family: var(--font-family);
+    text-align: center;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--hub-text-muted);
+  }
+
+  /* Certification Footer */
+  .test-results__footer {
+    display: flex;
+    justify-content: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--hub-border);
+  }
+
+  .certification-badge,
+  .test-date {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-family);
+    font-size: 0.75rem;
+    color: var(--hub-text-muted);
+    font-weight: 400;
+  }
+
+  .certification-badge svg {
+    color: var(--hub-gold);
+  }
+
+  .certification-badge span {
+    font-weight: 600;
+    color: var(--hub-gold);
+  }
+
+  /* Contact Note */
+  .test-results__note {
+    font-family: var(--font-family);
+    font-size: 0.7rem;
+    color: var(--hub-text-muted);
+    text-align: center;
+    padding: 0.625rem;
+    background: #F8F8F8;
+    border-radius: 0.5rem;
+    font-weight: 400;
+  }
+
+  .test-results__note span {
+    color: var(--hub-gold);
+  }
+
+  .test-results__note strong {
+    color: var(--hub-text);
+    font-weight: 600;
+  }
+
+  /* ============================================
+     CAROUSEL DOT INDICATORS
+     ============================================ */
+
+  .carousel-dots {
+    display: none;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1.25rem 0;
+  }
+
+  @media (max-width: 767px) {
+    .carousel-dots {
+      display: flex;
+    }
+  }
+
+  .carousel-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: none;
+    background: var(--hub-gold-medium);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+  }
+
+  .carousel-dot:hover {
+    background: var(--hub-gold-glow);
+  }
+
+  .carousel-dot.is-active {
+    background: var(--hub-gold);
+    width: 24px;
+    border-radius: 4px;
   }
 
   /* Empty State */
   .ingredient-hub__empty {
+    font-family: var(--font-family);
     text-align: center;
     padding: 4rem 2rem;
     color: var(--hub-text-muted);
+    font-weight: 400;
   }
 </style>
 
@@ -813,7 +908,6 @@
 
   // Tab Switching Logic
   const tabs = section.querySelectorAll('.ingredient-card__tab');
-  const panels = section.querySelectorAll('.tab-panel');
 
   tabs.forEach(tab => {
     tab.addEventListener('click', function() {
@@ -836,16 +930,49 @@
       if (activePanel) {
         activePanel.classList.add('is-active');
 
-        // Re-trigger animations for the panel content
+        // Re-trigger animations
         const animatedItems = activePanel.querySelectorAll('[style*="animation-delay"]');
         animatedItems.forEach(item => {
           item.style.animation = 'none';
-          item.offsetHeight; // Trigger reflow
+          item.offsetHeight;
           item.style.animation = '';
         });
       }
     });
   });
+
+  // Mobile Carousel Dot Indicators
+  const carousel = section.querySelector('.ingredient-hub__carousel');
+  const dots = section.querySelectorAll('.carousel-dot');
+  const cards = section.querySelectorAll('.ingredient-card');
+
+  if (carousel && dots.length > 0 && cards.length > 0) {
+    // Update dots on scroll
+    let scrollTimeout;
+    carousel.addEventListener('scroll', function() {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        const cardWidth = cards[0].offsetWidth + 16; // card width + gap
+        const scrollLeft = carousel.scrollLeft;
+        const index = Math.round(scrollLeft / cardWidth);
+
+        dots.forEach((dot, i) => {
+          dot.classList.toggle('is-active', i === index);
+        });
+      }, 50);
+    }, { passive: true });
+
+    // Click dot to scroll to card
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', function() {
+        const cardWidth = cards[0].offsetWidth + 16;
+        carousel.scrollTo({
+          left: index * cardWidth,
+          behavior: 'smooth'
+        });
+      });
+    });
+  }
 
   // Animate progress bars when Test Results tab is shown
   const testPanels = section.querySelectorAll('.tab-panel[data-panel="tests"]');
@@ -886,21 +1013,9 @@
     },
     {
       "type": "color",
-      "id": "accent_color",
-      "label": "Vurgu Rengi",
-      "default": "#D97706"
-    },
-    {
-      "type": "color",
       "id": "background_color",
       "label": "Arka Plan Rengi",
       "default": "#ffffff"
-    },
-    {
-      "type": "color",
-      "id": "text_color",
-      "label": "Metin Rengi",
-      "default": "#1f2937"
     },
     {
       "type": "range",
@@ -1023,6 +1138,18 @@
             "test_results": "Ağır Metal Testi|GEÇTİ|100\nMikrobiyolojik Test|GEÇTİ|100\nSaflık Analizi|GEÇTİ|98.5\nPestisit Testi|GEÇTİ|100",
             "certification": "GMP Sertifikalı",
             "test_date": "Aralık 2023"
+          }
+        },
+        {
+          "type": "ingredient",
+          "settings": {
+            "name": "Reishi",
+            "tagline": "Ölümsüzlük Mantarı",
+            "benefits": "Bağışıklık sistemini destekler\nUyku kalitesini artırır\nStres direncini güçlendirir\nAntioksidan koruma sağlar",
+            "articles": "Ganoderma lucidum immunomodulatory effects|PubMed|https://pubmed.ncbi.nlm.nih.gov/\nReishi mushroom benefits|Frontiers in Pharmacology|https://www.frontiersin.org/",
+            "test_results": "Ağır Metal Testi|GEÇTİ|100\nMikrobiyolojik Test|GEÇTİ|100\nSaflık Analizi|GEÇTİ|97.8\nPestisit Testi|GEÇTİ|100",
+            "certification": "Organik Sertifikalı",
+            "test_date": "Kasım 2023"
           }
         }
       ]
