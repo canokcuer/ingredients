@@ -293,20 +293,21 @@
      ============================================ */
 
   #ingredient-hub-{{ section.id }} {
-    /* Gold Color Scheme */
+    /* Gold - Only for highlights */
     --hub-gold: #D4AF37;
-    --hub-gold-light: rgba(212, 175, 55, 0.1);
-    --hub-gold-medium: rgba(212, 175, 55, 0.2);
-    --hub-gold-glow: rgba(212, 175, 55, 0.4);
+    --hub-gold-light: rgba(212, 175, 55, 0.08);
 
-    /* Black & White */
+    /* Black & White - Primary palette */
     --hub-black: #000000;
     --hub-white: #FFFFFF;
+    --hub-gray: #333333;
+    --hub-gray-light: rgba(0, 0, 0, 0.04);
+    --hub-gray-medium: rgba(0, 0, 0, 0.08);
     --hub-text: #000000;
     --hub-text-muted: rgba(0, 0, 0, 0.5);
     --hub-bg: {{ section.settings.background_color }};
     --hub-card-bg: #FFFFFF;
-    --hub-border: rgba(212, 175, 55, 0.2);
+    --hub-border: rgba(0, 0, 0, 0.1);
 
     /* Standardized Typography */
     --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -364,8 +365,7 @@
     .ingredient-hub__carousel {
       display: flex;
       overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      scroll-behavior: smooth;
+      scroll-snap-type: x proximity; /* Easier, more natural scrolling */
       gap: 1rem;
       /* Center first card with padding for peek effect */
       padding-left: calc(50% - 145px);
@@ -373,6 +373,8 @@
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
       -ms-overflow-style: none;
+      /* Smoother momentum scrolling */
+      overscroll-behavior-x: contain;
     }
 
     .ingredient-hub__carousel::-webkit-scrollbar {
@@ -382,6 +384,7 @@
     .ingredient-card {
       flex: 0 0 290px;
       scroll-snap-align: center;
+      scroll-snap-stop: normal; /* Allow skipping cards for faster swipe */
     }
   }
 
@@ -426,8 +429,8 @@
     border-radius: 50%;
     overflow: hidden;
     background: var(--hub-white);
-    box-shadow: 0 4px 16px rgba(212, 175, 55, 0.2);
-    border: 2px solid var(--hub-gold-medium);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    border: 2px solid var(--hub-gray-medium);
   }
 
   .ingredient-card__image {
@@ -497,11 +500,12 @@
 
   .ingredient-card__tab:hover {
     color: var(--hub-text);
-    background: var(--hub-gold-light);
+    background: var(--hub-gray-light);
   }
 
   .ingredient-card__tab.is-active {
-    color: var(--hub-gold);
+    color: var(--hub-black);
+    font-weight: 600;
   }
 
   .ingredient-card__tab.is-active::after {
@@ -516,11 +520,10 @@
   }
 
   /* ============================================
-     TAB CONTENT
+     TAB CONTENT - Dynamic height based on content
      ============================================ */
 
   .ingredient-card__content {
-    min-height: 260px;
     padding: 1.25rem;
   }
 
@@ -553,9 +556,9 @@
     align-items: center;
     gap: 0.75rem;
     padding: 0.75rem 1rem;
-    background: var(--hub-gold-light);
+    background: var(--hub-gray-light);
     border-radius: 0.625rem;
-    border-left: 3px solid var(--hub-gold);
+    border-left: 3px solid var(--hub-black);
     opacity: 0;
     animation: slideInBenefit 0.4s ease forwards;
   }
@@ -567,7 +570,7 @@
 
   .benefit-item__icon {
     flex-shrink: 0;
-    color: var(--hub-gold);
+    color: var(--hub-black);
   }
 
   .benefit-item__text {
@@ -618,9 +621,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--hub-gold-light);
+    background: var(--hub-gray-light);
     border-radius: 0.5rem;
-    color: var(--hub-gold);
+    color: var(--hub-black);
   }
 
   .article-card__content {
@@ -652,7 +655,7 @@
 
   .article-card:hover .article-card__arrow {
     transform: translate(2px, -2px);
-    color: var(--hub-gold);
+    color: var(--hub-black);
   }
 
   .empty-state {
@@ -686,29 +689,27 @@
     }
   }
 
-  /* Premium Glass-Morphism Test Card */
+  /* Premium Test Card */
   .test-card {
-    background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(250,250,250,0.9) 100%);
-    backdrop-filter: blur(10px);
-    border: 1px solid var(--hub-gold-medium);
+    background: var(--hub-white);
+    border: 1px solid var(--hub-border);
     border-radius: 0.875rem;
     padding: 0.875rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     opacity: 0;
     animation: popInCard 0.5s ease forwards;
     transition: all 0.3s ease;
   }
 
   @keyframes popInCard {
-    0% { opacity: 0; transform: scale(0.9); }
-    70% { transform: scale(1.02); }
+    0% { opacity: 0; transform: scale(0.95); }
     100% { opacity: 1; transform: scale(1); }
   }
 
   .test-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(212, 175, 55, 0.15);
-    border-color: var(--hub-gold);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    border-color: var(--hub-black);
   }
 
   .test-card__header {
@@ -723,7 +724,6 @@
     height: 8px;
     border-radius: 50%;
     background: var(--hub-gold);
-    box-shadow: 0 0 8px var(--hub-gold-glow);
     animation: pulse 2s ease-in-out infinite;
   }
 
@@ -757,7 +757,7 @@
 
   @keyframes checkPop {
     0% { transform: scale(0); opacity: 0; }
-    50% { transform: scale(1.2); }
+    50% { transform: scale(1.1); }
     100% { transform: scale(1); opacity: 1; }
   }
 
@@ -774,9 +774,9 @@
 
   /* Animated Progress Bar */
   .test-card__progress {
-    height: 5px;
-    background: rgba(0, 0, 0, 0.06);
-    border-radius: 3px;
+    height: 4px;
+    background: rgba(0, 0, 0, 0.08);
+    border-radius: 2px;
     overflow: hidden;
     margin-bottom: 0.4rem;
   }
@@ -784,8 +784,8 @@
   .test-card__progress-bar {
     height: 100%;
     width: 0;
-    background: linear-gradient(90deg, var(--hub-gold) 0%, #E5C158 100%);
-    border-radius: 3px;
+    background: linear-gradient(90deg, var(--hub-black) 0%, var(--hub-gold) 100%);
+    border-radius: 2px;
     animation: fillProgress 1s ease forwards;
     animation-delay: 0.3s;
   }
@@ -824,12 +824,12 @@
   }
 
   .certification-badge svg {
-    color: var(--hub-gold);
+    color: var(--hub-black);
   }
 
   .certification-badge span {
     font-weight: 600;
-    color: var(--hub-gold);
+    color: var(--hub-black);
   }
 
   /* Contact Note */
@@ -845,7 +845,7 @@
   }
 
   .test-results__note span {
-    color: var(--hub-gold);
+    color: var(--hub-black);
   }
 
   .test-results__note strong {
@@ -875,18 +875,18 @@
     height: 8px;
     border-radius: 50%;
     border: none;
-    background: var(--hub-gold-medium);
+    background: var(--hub-gray-medium);
     cursor: pointer;
     transition: all 0.3s ease;
     padding: 0;
   }
 
   .carousel-dot:hover {
-    background: var(--hub-gold-glow);
+    background: rgba(0, 0, 0, 0.2);
   }
 
   .carousel-dot.is-active {
-    background: var(--hub-gold);
+    background: var(--hub-black);
     width: 24px;
     border-radius: 4px;
   }
