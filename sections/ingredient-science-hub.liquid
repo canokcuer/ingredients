@@ -1,0 +1,1032 @@
+{% comment %}
+  Ingredient Science Hub
+  A comprehensive ingredient information section with tabs for:
+  - Faydalar (Benefits)
+  - Makaleler (Scientific Articles)
+  - Test Sonuçları (Lab Results)
+
+  Features:
+  - Premium glass-morphism test result cards
+  - Animated progress bars
+  - Staggered fade-in animations
+  - Responsive vertical layout
+{% endcomment %}
+
+<section
+  class="ingredient-hub"
+  id="ingredient-hub-{{ section.id }}"
+  data-section-id="{{ section.id }}"
+>
+  <div class="ingredient-hub__container page-width">
+    {% if section.settings.title != blank %}
+      <h2 class="ingredient-hub__title">{{ section.settings.title }}</h2>
+    {% endif %}
+
+    {% if section.settings.subtitle != blank %}
+      <p class="ingredient-hub__subtitle">{{ section.settings.subtitle }}</p>
+    {% endif %}
+
+    {% if section.blocks.size > 0 %}
+      <div class="ingredient-hub__grid">
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'ingredient' %}
+              <article
+                class="ingredient-card"
+                data-block-id="{{ block.id }}"
+                {{ block.shopify_attributes }}
+              >
+                {%- comment -%} Tab Navigation {%- endcomment -%}
+                <nav class="ingredient-card__tabs" role="tablist">
+                  <button
+                    class="ingredient-card__tab is-active"
+                    role="tab"
+                    aria-selected="true"
+                    data-tab="benefits"
+                    data-card="{{ block.id }}"
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                    </svg>
+                    <span>Faydalar</span>
+                  </button>
+                  <button
+                    class="ingredient-card__tab"
+                    role="tab"
+                    aria-selected="false"
+                    data-tab="articles"
+                    data-card="{{ block.id }}"
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                      <polyline points="14,2 14,8 20,8"/>
+                      <line x1="16" y1="13" x2="8" y2="13"/>
+                      <line x1="16" y1="17" x2="8" y2="17"/>
+                      <line x1="10" y1="9" x2="8" y2="9"/>
+                    </svg>
+                    <span>Makaleler</span>
+                  </button>
+                  <button
+                    class="ingredient-card__tab"
+                    role="tab"
+                    aria-selected="false"
+                    data-tab="tests"
+                    data-card="{{ block.id }}"
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M9 12l2 2 4-4"/>
+                      <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+                    </svg>
+                    <span>Test Sonuçları</span>
+                  </button>
+                </nav>
+
+                {%- comment -%} Tab Content Area {%- endcomment -%}
+                <div class="ingredient-card__content">
+                  {%- comment -%} Benefits Tab {%- endcomment -%}
+                  <div
+                    class="tab-panel is-active"
+                    role="tabpanel"
+                    data-panel="benefits"
+                    data-card="{{ block.id }}"
+                  >
+                    <div class="benefits-list">
+                      {% assign benefits = block.settings.benefits | newline_to_br | split: '<br />' %}
+                      {% for benefit in benefits %}
+                        {% assign benefit_text = benefit | strip %}
+                        {% if benefit_text != blank %}
+                          <div class="benefit-item" style="animation-delay: {{ forloop.index | times: 0.1 }}s">
+                            <div class="benefit-item__icon">
+                              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                <polyline points="22 4 12 14.01 9 11.01"/>
+                              </svg>
+                            </div>
+                            <span class="benefit-item__text">{{ benefit_text }}</span>
+                          </div>
+                        {% endif %}
+                      {% endfor %}
+                    </div>
+                  </div>
+
+                  {%- comment -%} Articles Tab {%- endcomment -%}
+                  <div
+                    class="tab-panel"
+                    role="tabpanel"
+                    data-panel="articles"
+                    data-card="{{ block.id }}"
+                  >
+                    <div class="articles-list">
+                      {% assign articles = block.settings.articles | newline_to_br | split: '<br />' %}
+                      {% for article in articles %}
+                        {% assign article_text = article | strip %}
+                        {% if article_text != blank %}
+                          {% assign article_parts = article_text | split: '|' %}
+                          {% assign article_title = article_parts[0] | strip %}
+                          {% assign article_source = article_parts[1] | strip %}
+                          {% assign article_url = article_parts[2] | strip %}
+                          <a
+                            href="{{ article_url }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="article-card"
+                            style="animation-delay: {{ forloop.index | times: 0.15 }}s"
+                          >
+                            <div class="article-card__icon">
+                              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14,2 14,8 20,8"/>
+                              </svg>
+                            </div>
+                            <div class="article-card__content">
+                              <h4 class="article-card__title">{{ article_title }}</h4>
+                              {% if article_source != blank %}
+                                <span class="article-card__source">{{ article_source }}</span>
+                              {% endif %}
+                            </div>
+                            <div class="article-card__arrow">
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                                <polyline points="15 3 21 3 21 9"/>
+                                <line x1="10" y1="14" x2="21" y2="3"/>
+                              </svg>
+                            </div>
+                          </a>
+                        {% endif %}
+                      {% endfor %}
+                      {% if articles.size == 0 or block.settings.articles == blank %}
+                        <p class="empty-state">Henüz makale eklenmedi.</p>
+                      {% endif %}
+                    </div>
+                  </div>
+
+                  {%- comment -%} Test Results Tab (PREMIUM Design) {%- endcomment -%}
+                  <div
+                    class="tab-panel"
+                    role="tabpanel"
+                    data-panel="tests"
+                    data-card="{{ block.id }}"
+                  >
+                    <div class="test-results">
+                      <div class="test-cards-grid">
+                        {% assign tests = block.settings.test_results | newline_to_br | split: '<br />' %}
+                        {% for test in tests %}
+                          {% assign test_text = test | strip %}
+                          {% if test_text != blank %}
+                            {% assign test_parts = test_text | split: '|' %}
+                            {% assign test_name = test_parts[0] | strip %}
+                            {% assign test_result = test_parts[1] | strip %}
+                            {% assign test_percent = test_parts[2] | strip | default: '100' %}
+
+                            <div class="test-card" style="animation-delay: {{ forloop.index | times: 0.15 }}s">
+                              <div class="test-card__header">
+                                <div class="test-card__indicator"></div>
+                                <h5 class="test-card__name">{{ test_name }}</h5>
+                              </div>
+
+                              <div class="test-card__status">
+                                {% if test_result == 'GEÇTİ' or test_result == 'PASS' %}
+                                  <svg class="test-card__check" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                    <polyline points="22 4 12 14.01 9 11.01"/>
+                                  </svg>
+                                  <span class="test-card__result test-card__result--pass">GEÇTİ</span>
+                                {% else %}
+                                  <span class="test-card__result">{{ test_result }}</span>
+                                {% endif %}
+                              </div>
+
+                              <div class="test-card__progress">
+                                <div class="test-card__progress-bar" style="--progress: {{ test_percent }}%"></div>
+                              </div>
+
+                              <div class="test-card__percent">%{{ test_percent }}</div>
+                            </div>
+                          {% endif %}
+                        {% endfor %}
+                      </div>
+
+                      {%- comment -%} Certification Footer {%- endcomment -%}
+                      <div class="test-results__footer">
+                        {% if block.settings.certification != blank %}
+                          <div class="certification-badge">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                              <circle cx="12" cy="8" r="7"/>
+                              <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>
+                            </svg>
+                            <span>{{ block.settings.certification }}</span>
+                          </div>
+                        {% endif %}
+
+                        {% if block.settings.test_date != blank %}
+                          <div class="test-date">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                              <line x1="16" y1="2" x2="16" y2="6"/>
+                              <line x1="8" y1="2" x2="8" y2="6"/>
+                              <line x1="3" y1="10" x2="21" y2="10"/>
+                            </svg>
+                            <span>{{ block.settings.test_date }}</span>
+                          </div>
+                        {% endif %}
+                      </div>
+
+                      {%- comment -%} Contact Note {%- endcomment -%}
+                      <div class="test-results__note">
+                        <span>*</span> Detaylı analiz raporları için <strong>info@cyrasoul.com</strong> adresine mail atabilirsiniz.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {%- comment -%} Ingredient Image & Info {%- endcomment -%}
+                <div class="ingredient-card__footer">
+                  {% if block.settings.image != blank %}
+                    <div class="ingredient-card__image-wrapper">
+                      <img
+                        src="{{ block.settings.image | image_url: width: 400 }}"
+                        srcset="
+                          {{ block.settings.image | image_url: width: 200 }} 200w,
+                          {{ block.settings.image | image_url: width: 300 }} 300w,
+                          {{ block.settings.image | image_url: width: 400 }} 400w
+                        "
+                        sizes="(max-width: 768px) 150px, 200px"
+                        alt="{{ block.settings.name | escape }}"
+                        class="ingredient-card__image"
+                        loading="lazy"
+                        width="200"
+                        height="200"
+                      >
+                    </div>
+                  {% endif %}
+
+                  <div class="ingredient-card__info">
+                    <h3 class="ingredient-card__name">{{ block.settings.name }}</h3>
+                    {% if block.settings.tagline != blank %}
+                      <p class="ingredient-card__tagline">{{ block.settings.tagline }}</p>
+                    {% endif %}
+                  </div>
+                </div>
+              </article>
+          {% endcase %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="ingredient-hub__empty">
+        <p>İçerik düzenleyiciden içerik ekleyin.</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  /* ============================================
+     INGREDIENT SCIENCE HUB - PREMIUM STYLES
+     ============================================ */
+
+  #ingredient-hub-{{ section.id }} {
+    --hub-accent: {{ section.settings.accent_color }};
+    --hub-accent-light: {{ section.settings.accent_color | color_modify: 'alpha', 0.1 }};
+    --hub-accent-glow: {{ section.settings.accent_color | color_modify: 'alpha', 0.3 }};
+    --hub-bg: {{ section.settings.background_color }};
+    --hub-text: {{ section.settings.text_color }};
+    --hub-text-muted: {{ section.settings.text_color | color_modify: 'alpha', 0.6 }};
+    --hub-pass: #10B981;
+    --hub-pass-light: rgba(16, 185, 129, 0.1);
+    --hub-pass-glow: rgba(16, 185, 129, 0.3);
+    --hub-card-bg: #ffffff;
+    --hub-border: rgba(0, 0, 0, 0.08);
+
+    padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;
+    background: var(--hub-bg);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  .ingredient-hub__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  .ingredient-hub__title {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    color: var(--hub-text);
+  }
+
+  .ingredient-hub__subtitle {
+    text-align: center;
+    color: var(--hub-text-muted);
+    font-size: 1.1rem;
+    margin-bottom: 3rem;
+  }
+
+  /* Grid Layout */
+  .ingredient-hub__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 2rem;
+  }
+
+  @media (max-width: 400px) {
+    .ingredient-hub__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ============================================
+     INGREDIENT CARD
+     ============================================ */
+
+  .ingredient-card {
+    background: var(--hub-card-bg);
+    border-radius: 1.5rem;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+    border: 1px solid var(--hub-border);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .ingredient-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+  }
+
+  /* ============================================
+     TAB NAVIGATION
+     ============================================ */
+
+  .ingredient-card__tabs {
+    display: flex;
+    border-bottom: 1px solid var(--hub-border);
+    background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+  }
+
+  .ingredient-card__tab {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--hub-text-muted);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+
+  .ingredient-card__tab svg {
+    flex-shrink: 0;
+  }
+
+  .ingredient-card__tab:hover {
+    color: var(--hub-text);
+    background: var(--hub-accent-light);
+  }
+
+  .ingredient-card__tab.is-active {
+    color: var(--hub-accent);
+  }
+
+  .ingredient-card__tab.is-active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 10%;
+    right: 10%;
+    height: 3px;
+    background: var(--hub-accent);
+    border-radius: 3px 3px 0 0;
+  }
+
+  @media (max-width: 480px) {
+    .ingredient-card__tab span {
+      font-size: 0.7rem;
+    }
+
+    .ingredient-card__tab svg {
+      width: 14px;
+      height: 14px;
+    }
+  }
+
+  /* ============================================
+     TAB CONTENT
+     ============================================ */
+
+  .ingredient-card__content {
+    min-height: 280px;
+    padding: 1.5rem;
+  }
+
+  .tab-panel {
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .tab-panel.is-active {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ============================================
+     BENEFITS TAB
+     ============================================ */
+
+  .benefits-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .benefit-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1rem;
+    background: linear-gradient(135deg, var(--hub-pass-light) 0%, rgba(16, 185, 129, 0.05) 100%);
+    border-radius: 0.75rem;
+    border-left: 3px solid var(--hub-pass);
+    opacity: 0;
+    animation: slideInBenefit 0.4s ease forwards;
+  }
+
+  @keyframes slideInBenefit {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .benefit-item__icon {
+    flex-shrink: 0;
+    color: var(--hub-pass);
+  }
+
+  .benefit-item__text {
+    font-size: 0.95rem;
+    color: var(--hub-text);
+    font-weight: 500;
+  }
+
+  /* ============================================
+     ARTICLES TAB
+     ============================================ */
+
+  .articles-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .article-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 0.75rem;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s ease;
+    opacity: 0;
+    animation: slideUpArticle 0.4s ease forwards;
+  }
+
+  @keyframes slideUpArticle {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .article-card:hover {
+    background: #f0f1f3;
+    transform: translateX(4px);
+  }
+
+  .article-card__icon {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--hub-accent-light);
+    border-radius: 0.5rem;
+    color: var(--hub-accent);
+  }
+
+  .article-card__content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .article-card__title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--hub-text);
+    margin: 0 0 0.25rem 0;
+    line-height: 1.3;
+  }
+
+  .article-card__source {
+    font-size: 0.75rem;
+    color: var(--hub-text-muted);
+  }
+
+  .article-card__arrow {
+    flex-shrink: 0;
+    color: var(--hub-text-muted);
+    transition: transform 0.2s ease;
+  }
+
+  .article-card:hover .article-card__arrow {
+    transform: translate(2px, -2px);
+    color: var(--hub-accent);
+  }
+
+  .empty-state {
+    text-align: center;
+    color: var(--hub-text-muted);
+    padding: 2rem;
+    font-style: italic;
+  }
+
+  /* ============================================
+     TEST RESULTS TAB (PREMIUM DESIGN)
+     ============================================ */
+
+  .test-results {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .test-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  @media (max-width: 400px) {
+    .test-cards-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Premium Glass-Morphism Test Card */
+  .test-card {
+    background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.8);
+    border-radius: 1rem;
+    padding: 1rem;
+    box-shadow:
+      0 4px 16px rgba(0, 0, 0, 0.04),
+      inset 0 1px 0 rgba(255,255,255,0.8);
+    opacity: 0;
+    animation: popInCard 0.5s ease forwards;
+    transition: all 0.3s ease;
+  }
+
+  @keyframes popInCard {
+    0% { opacity: 0; transform: scale(0.9); }
+    70% { transform: scale(1.02); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  .test-card:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 8px 24px rgba(0, 0, 0, 0.08),
+      inset 0 1px 0 rgba(255,255,255,0.8),
+      0 0 0 1px var(--hub-accent-glow);
+  }
+
+  .test-card__header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .test-card__indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--hub-pass);
+    box-shadow: 0 0 8px var(--hub-pass-glow);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .test-card__name {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--hub-text-muted);
+    margin: 0;
+  }
+
+  .test-card__status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .test-card__check {
+    color: var(--hub-pass);
+    animation: checkPop 0.6s ease forwards;
+    animation-delay: inherit;
+  }
+
+  @keyframes checkPop {
+    0% { transform: scale(0); opacity: 0; }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .test-card__result {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--hub-text);
+  }
+
+  .test-card__result--pass {
+    color: var(--hub-pass);
+  }
+
+  /* Animated Progress Bar */
+  .test-card__progress {
+    height: 6px;
+    background: rgba(0, 0, 0, 0.06);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+  }
+
+  .test-card__progress-bar {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, var(--hub-accent) 0%, var(--hub-pass) 100%);
+    border-radius: 3px;
+    animation: fillProgress 1s ease forwards;
+    animation-delay: 0.3s;
+  }
+
+  @keyframes fillProgress {
+    to { width: var(--progress, 100%); }
+  }
+
+  .test-card__percent {
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--hub-text-muted);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* Certification Footer */
+  .test-results__footer {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--hub-border);
+  }
+
+  .certification-badge,
+  .test-date {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--hub-text-muted);
+  }
+
+  .certification-badge svg {
+    color: var(--hub-accent);
+  }
+
+  .certification-badge span {
+    font-weight: 600;
+    color: var(--hub-accent);
+  }
+
+  /* Contact Note */
+  .test-results__note {
+    font-size: 0.75rem;
+    color: var(--hub-text-muted);
+    text-align: center;
+    padding: 0.75rem;
+    background: #f8f9fa;
+    border-radius: 0.5rem;
+  }
+
+  .test-results__note span {
+    color: var(--hub-accent);
+  }
+
+  .test-results__note strong {
+    color: var(--hub-text);
+  }
+
+  /* ============================================
+     INGREDIENT FOOTER (Image & Info)
+     ============================================ */
+
+  .ingredient-card__footer {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.5rem;
+    background: linear-gradient(180deg, #f8f9fa 0%, #f0f1f3 100%);
+    border-top: 1px solid var(--hub-border);
+  }
+
+  .ingredient-card__image-wrapper {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+    border-radius: 1rem;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .ingredient-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .ingredient-card:hover .ingredient-card__image {
+    transform: scale(1.05);
+  }
+
+  .ingredient-card__info {
+    flex: 1;
+  }
+
+  .ingredient-card__name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--hub-text);
+    margin: 0 0 0.25rem 0;
+  }
+
+  .ingredient-card__tagline {
+    font-size: 0.85rem;
+    color: var(--hub-accent);
+    margin: 0;
+    font-weight: 500;
+  }
+
+  /* Empty State */
+  .ingredient-hub__empty {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--hub-text-muted);
+  }
+</style>
+
+<script>
+(function() {
+  const section = document.getElementById('ingredient-hub-{{ section.id }}');
+  if (!section) return;
+
+  // Tab Switching Logic
+  const tabs = section.querySelectorAll('.ingredient-card__tab');
+  const panels = section.querySelectorAll('.tab-panel');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', function() {
+      const cardId = this.dataset.card;
+      const tabName = this.dataset.tab;
+
+      // Update tabs for this card
+      section.querySelectorAll(`.ingredient-card__tab[data-card="${cardId}"]`).forEach(t => {
+        t.classList.remove('is-active');
+        t.setAttribute('aria-selected', 'false');
+      });
+      this.classList.add('is-active');
+      this.setAttribute('aria-selected', 'true');
+
+      // Update panels for this card
+      section.querySelectorAll(`.tab-panel[data-card="${cardId}"]`).forEach(p => {
+        p.classList.remove('is-active');
+      });
+      const activePanel = section.querySelector(`.tab-panel[data-panel="${tabName}"][data-card="${cardId}"]`);
+      if (activePanel) {
+        activePanel.classList.add('is-active');
+
+        // Re-trigger animations for the panel content
+        const animatedItems = activePanel.querySelectorAll('[style*="animation-delay"]');
+        animatedItems.forEach(item => {
+          item.style.animation = 'none';
+          item.offsetHeight; // Trigger reflow
+          item.style.animation = '';
+        });
+      }
+    });
+  });
+
+  // Animate progress bars when Test Results tab is shown
+  const testPanels = section.querySelectorAll('.tab-panel[data-panel="tests"]');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const progressBars = entry.target.querySelectorAll('.test-card__progress-bar');
+        progressBars.forEach(bar => {
+          bar.style.animation = 'none';
+          bar.offsetHeight;
+          bar.style.animation = '';
+        });
+      }
+    });
+  }, { threshold: 0.5 });
+
+  testPanels.forEach(panel => observer.observe(panel));
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Ingredient Science Hub",
+  "tag": "section",
+  "class": "section-ingredient-hub",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Başlık",
+      "default": "İçeriklerimizi Keşfedin"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Alt Başlık",
+      "default": "Bilim destekli, şeffaf formül"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Vurgu Rengi",
+      "default": "#D97706"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Arka Plan Rengi",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Metin Rengi",
+      "default": "#1f2937"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Üst Boşluk",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Alt Boşluk",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    }
+  ],
+  "blocks": [
+    {
+      "type": "ingredient",
+      "name": "İçerik",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Temel Bilgiler"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "İçerik Görseli"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "İçerik Adı",
+          "default": "Rhodiola Rosea"
+        },
+        {
+          "type": "text",
+          "id": "tagline",
+          "label": "Slogan",
+          "default": "Stres Kalkanı"
+        },
+        {
+          "type": "header",
+          "content": "Faydalar Sekmesi"
+        },
+        {
+          "type": "textarea",
+          "id": "benefits",
+          "label": "Faydalar",
+          "info": "Her satıra bir fayda yazın",
+          "default": "Bağışıklık sistemini güçlendirir\nEnerji seviyelerini artırır\nStres ve kaygıyı azaltır\nZihinsel odaklanmayı destekler"
+        },
+        {
+          "type": "header",
+          "content": "Makaleler Sekmesi"
+        },
+        {
+          "type": "textarea",
+          "id": "articles",
+          "label": "Bilimsel Makaleler",
+          "info": "Format: Başlık|Kaynak|URL (her satıra bir makale)",
+          "default": "Rhodiola rosea adaptogenic effects on stress|PubMed|https://pubmed.ncbi.nlm.nih.gov/\nClinical efficacy of Rhodiola|Journal of Ethnopharmacology|https://www.sciencedirect.com/"
+        },
+        {
+          "type": "header",
+          "content": "Test Sonuçları Sekmesi"
+        },
+        {
+          "type": "textarea",
+          "id": "test_results",
+          "label": "Test Sonuçları",
+          "info": "Format: Test Adı|Sonuç|Yüzde (her satıra bir test)",
+          "default": "Ağır Metal Testi|GEÇTİ|100\nMikrobiyolojik Test|GEÇTİ|100\nSaflık Analizi|GEÇTİ|99.2\nPestisit Testi|GEÇTİ|100"
+        },
+        {
+          "type": "text",
+          "id": "certification",
+          "label": "Sertifika",
+          "default": "ISO 22000"
+        },
+        {
+          "type": "text",
+          "id": "test_date",
+          "label": "Test Tarihi",
+          "default": "Ocak 2024"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Ingredient Science Hub",
+      "blocks": [
+        {
+          "type": "ingredient",
+          "settings": {
+            "name": "Rhodiola Rosea",
+            "tagline": "Stres Kalkanı",
+            "benefits": "Bağışıklık sistemini güçlendirir\nEnerji seviyelerini artırır\nStres ve kaygıyı azaltır\nZihinsel odaklanmayı destekler",
+            "articles": "Rhodiola rosea adaptogenic effects|PubMed|https://pubmed.ncbi.nlm.nih.gov/\nClinical efficacy study|Journal of Ethnopharmacology|https://www.sciencedirect.com/",
+            "test_results": "Ağır Metal Testi|GEÇTİ|100\nMikrobiyolojik Test|GEÇTİ|100\nSaflık Analizi|GEÇTİ|99.2\nPestisit Testi|GEÇTİ|100",
+            "certification": "ISO 22000",
+            "test_date": "Ocak 2024"
+          }
+        },
+        {
+          "type": "ingredient",
+          "settings": {
+            "name": "Ashwagandha",
+            "tagline": "Adaptojenik Güç",
+            "benefits": "Kortizol seviyelerini dengeler\nUyku kalitesini artırır\nKas gücünü destekler\nBilişsel fonksiyonları iyileştirir",
+            "articles": "Ashwagandha for anxiety and stress|PubMed|https://pubmed.ncbi.nlm.nih.gov/\nWithanolides biological activity|Phytomedicine|https://www.sciencedirect.com/",
+            "test_results": "Ağır Metal Testi|GEÇTİ|100\nMikrobiyolojik Test|GEÇTİ|100\nSaflık Analizi|GEÇTİ|98.5\nPestisit Testi|GEÇTİ|100",
+            "certification": "GMP Sertifikalı",
+            "test_date": "Aralık 2023"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
