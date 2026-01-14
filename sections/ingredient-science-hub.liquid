@@ -365,15 +365,14 @@
     .ingredient-hub__carousel {
       display: flex;
       overflow-x: auto;
-      scroll-snap-type: x proximity; /* Easier, more natural scrolling */
-      gap: 1rem;
-      /* Center first card with padding for peek effect */
-      padding-left: calc(50% - 145px);
-      padding-right: calc(50% - 145px);
+      scroll-snap-type: x proximity;
+      gap: 16px;
+      /* Center cards: 50vw - half of card width (130px) */
+      padding-left: calc(50vw - 130px);
+      padding-right: calc(50vw - 130px);
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
       -ms-overflow-style: none;
-      /* Smoother momentum scrolling */
       overscroll-behavior-x: contain;
     }
 
@@ -382,9 +381,9 @@
     }
 
     .ingredient-card {
-      flex: 0 0 290px;
+      flex: 0 0 260px; /* Smaller cards = more peek visible */
       scroll-snap-align: center;
-      scroll-snap-stop: normal; /* Allow skipping cards for faster swipe */
+      scroll-snap-stop: normal;
     }
   }
 
