@@ -202,6 +202,8 @@
                             {% assign test_result = test_parts[1] | strip %}
                             {% assign test_percent = test_parts[2] | strip | default: '100' %}
 
+                            {% assign test_range = test_parts[3] | strip %}
+
                             <div class="test-card" style="animation-delay: {{ forloop.index | times: 0.15 }}s">
                               <div class="test-card__header">
                                 <div class="test-card__indicator"></div>
@@ -210,7 +212,7 @@
 
                               <div class="test-card__status">
                                 {% if test_result == 'GEÇTİ' or test_result == 'PASS' %}
-                                  <svg class="test-card__check" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                  <svg class="test-card__check" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
                                     <polyline points="22 4 12 14.01 9 11.01"/>
                                   </svg>
@@ -219,6 +221,13 @@
                                   <span class="test-card__result">{{ test_result }}</span>
                                 {% endif %}
                               </div>
+
+                              {% if test_range != blank %}
+                                <div class="test-card__range">
+                                  <span class="test-card__range-label">Kabul:</span>
+                                  <span class="test-card__range-value">{{ test_range }}</span>
+                                </div>
+                              {% endif %}
 
                               <div class="test-card__progress">
                                 <div class="test-card__progress-bar" style="--progress: {{ test_percent }}%"></div>
@@ -713,14 +722,16 @@
 
   .test-card__header {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.625rem;
+    gap: 0.25rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
   }
 
   .test-card__indicator {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
     background: var(--hub-gold);
     animation: pulse 2s ease-in-out infinite;
@@ -733,12 +744,13 @@
 
   .test-card__name {
     font-family: var(--font-family);
-    font-size: 0.65rem;
+    font-size: 0.7rem;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--hub-text-muted);
+    letter-spacing: 0.03em;
+    color: var(--hub-text);
     margin: 0;
+    text-align: center;
   }
 
   .test-card__status {
@@ -769,6 +781,32 @@
 
   .test-card__result--pass {
     color: var(--hub-gold);
+  }
+
+  /* Accepted Range Display */
+  .test-card__range {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.3rem;
+    margin-bottom: 0.5rem;
+    padding: 0.35rem 0.5rem;
+    background: var(--hub-gray-light);
+    border-radius: 0.25rem;
+  }
+
+  .test-card__range-label {
+    font-family: var(--font-family);
+    font-size: 0.6rem;
+    color: var(--hub-text-muted);
+    font-weight: 500;
+  }
+
+  .test-card__range-value {
+    font-family: var(--font-family);
+    font-size: 0.65rem;
+    color: var(--hub-text);
+    font-weight: 600;
   }
 
   /* Animated Progress Bar */
@@ -1093,8 +1131,8 @@
           "type": "textarea",
           "id": "test_results",
           "label": "Test Sonuçları",
-          "info": "Format: Test Adı|Sonuç|Yüzde (her satıra bir test)",
-          "default": "Ağır Metal Testi|GEÇTİ|100\nMikrobiyolojik Test|GEÇTİ|100\nSaflık Analizi|GEÇTİ|99.2\nPestisit Testi|GEÇTİ|100"
+          "info": "Format: Test Adı|Sonuç|Yüzde|Kabul Aralığı (her satıra bir test). Örnek: Ağır Metal Testi|GEÇTİ|100|< 0.1 ppm",
+          "default": "Ağır Metal Testi|GEÇTİ|100|< 0.1 ppm\nMikrobiyolojik Test|GEÇTİ|100|< 10 CFU/g\nSaflık Analizi|GEÇTİ|99.2|> 98%\nPestisit Testi|GEÇTİ|100|Tespit Edilmedi"
         },
         {
           "type": "text",
@@ -1122,7 +1160,7 @@
             "tagline": "Stres Kalkanı",
             "benefits": "Bağışıklık sistemini güçlendirir\nEnerji seviyelerini artırır\nStres ve kaygıyı azaltır\nZihinsel odaklanmayı destekler",
             "articles": "Rhodiola rosea adaptogenic effects|PubMed|https://pubmed.ncbi.nlm.nih.gov/\nClinical efficacy study|Journal of Ethnopharmacology|https://www.sciencedirect.com/",
-            "test_results": "Ağır Metal Testi|GEÇTİ|100\nMikrobiyolojik Test|GEÇTİ|100\nSaflık Analizi|GEÇTİ|99.2\nPestisit Testi|GEÇTİ|100",
+            "test_results": "Ağır Metal Testi|GEÇTİ|100|< 0.1 ppm\nMikrobiyolojik Test|GEÇTİ|100|< 10 CFU/g\nSaflık Analizi|GEÇTİ|99.2|> 98%\nPestisit Testi|GEÇTİ|100|Tespit Edilmedi",
             "certification": "ISO 22000",
             "test_date": "Ocak 2024"
           }
@@ -1134,7 +1172,7 @@
             "tagline": "Adaptojenik Güç",
             "benefits": "Kortizol seviyelerini dengeler\nUyku kalitesini artırır\nKas gücünü destekler\nBilişsel fonksiyonları iyileştirir",
             "articles": "Ashwagandha for anxiety and stress|PubMed|https://pubmed.ncbi.nlm.nih.gov/\nWithanolides biological activity|Phytomedicine|https://www.sciencedirect.com/",
-            "test_results": "Ağır Metal Testi|GEÇTİ|100\nMikrobiyolojik Test|GEÇTİ|100\nSaflık Analizi|GEÇTİ|98.5\nPestisit Testi|GEÇTİ|100",
+            "test_results": "Ağır Metal Testi|GEÇTİ|100|< 0.1 ppm\nMikrobiyolojik Test|GEÇTİ|100|< 10 CFU/g\nSaflık Analizi|GEÇTİ|98.5|> 98%\nPestisit Testi|GEÇTİ|100|Tespit Edilmedi",
             "certification": "GMP Sertifikalı",
             "test_date": "Aralık 2023"
           }
@@ -1146,7 +1184,7 @@
             "tagline": "Ölümsüzlük Mantarı",
             "benefits": "Bağışıklık sistemini destekler\nUyku kalitesini artırır\nStres direncini güçlendirir\nAntioksidan koruma sağlar",
             "articles": "Ganoderma lucidum immunomodulatory effects|PubMed|https://pubmed.ncbi.nlm.nih.gov/\nReishi mushroom benefits|Frontiers in Pharmacology|https://www.frontiersin.org/",
-            "test_results": "Ağır Metal Testi|GEÇTİ|100\nMikrobiyolojik Test|GEÇTİ|100\nSaflık Analizi|GEÇTİ|97.8\nPestisit Testi|GEÇTİ|100",
+            "test_results": "Ağır Metal Testi|GEÇTİ|100|< 0.1 ppm\nMikrobiyolojik Test|GEÇTİ|100|< 10 CFU/g\nSaflık Analizi|GEÇTİ|97.8|> 98%\nPestisit Testi|GEÇTİ|100|Tespit Edilmedi",
             "certification": "Organik Sertifikalı",
             "test_date": "Kasım 2023"
           }

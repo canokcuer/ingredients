@@ -21,7 +21,7 @@ Based on user feedback, pivoted to a tabbed interface design:
 - [x] Premium glass-morphism test result cards
 - [x] Animated progress bars (CSS keyframes)
 - [x] Staggered fade-in animations
-- [x] Benefits list with green checkmarks
+- [x] Benefits list with checkmarks
 - [x] Article cards with external links (new tab)
 - [x] Certification badge and test date display
 - [x] Contact note for detailed reports
@@ -29,6 +29,17 @@ Based on user feedback, pivoted to a tabbed interface design:
 - [x] Responsive grid layout
 - [x] Turkish character support (ş, ğ, ü, ö, ç, ı, İ)
 - [x] ARIA accessibility attributes
+
+### v2 Redesign (Gold/Black/White):
+- [x] Image/name moved to TOP of card
+- [x] Black, white, gold (#D4AF37) color scheme
+- [x] Mobile horizontal carousel with centered first card
+- [x] Peek effect showing adjacent ingredients (~50px visible)
+- [x] Natural swipe scrolling (scroll-snap-type: x proximity)
+- [x] Dot indicators for mobile navigation
+- [x] Dynamic card height (no fixed min-height)
+- [x] Centered test result titles
+- [x] Accepted range display (e.g., "Kabul: < 0.1 ppm")
 
 ### Files Created:
 - `sections/ingredient-science-hub.liquid` - New premium section
