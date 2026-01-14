@@ -212,22 +212,23 @@
 
                               <div class="test-card__status">
                                 {% if test_result == 'GEÇTİ' or test_result == 'PASS' %}
-                                  <svg class="test-card__check" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                  <svg class="test-card__check" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
                                     <polyline points="22 4 12 14.01 9 11.01"/>
                                   </svg>
-                                  <span class="test-card__result test-card__result--pass">GEÇTİ</span>
+                                  <div class="test-card__result-group">
+                                    <span class="test-card__result test-card__result--pass">GEÇTİ</span>
+                                    {% if test_range != blank %}
+                                      <span class="test-card__range">({{ test_range }})</span>
+                                    {% endif %}
+                                  </div>
                                 {% else %}
                                   <span class="test-card__result">{{ test_result }}</span>
+                                  {% if test_range != blank %}
+                                    <span class="test-card__range">({{ test_range }})</span>
+                                  {% endif %}
                                 {% endif %}
                               </div>
-
-                              {% if test_range != blank %}
-                                <div class="test-card__range">
-                                  <span class="test-card__range-label">Kabul:</span>
-                                  <span class="test-card__range-value">{{ test_range }}</span>
-                                </div>
-                              {% endif %}
 
                               <div class="test-card__progress">
                                 <div class="test-card__progress-bar" style="--progress: {{ test_percent }}%"></div>
@@ -360,7 +361,7 @@
     gap: 2rem;
   }
 
-  /* Mobile: Horizontal Carousel with Peek */
+  /* Mobile: Horizontal Infinite Carousel */
   @media (max-width: 767px) {
     .ingredient-hub__container {
       padding: 0;
@@ -374,15 +375,14 @@
     .ingredient-hub__carousel {
       display: flex;
       overflow-x: auto;
-      scroll-snap-type: x proximity;
+      scroll-snap-type: x mandatory;
       gap: 16px;
-      /* Center cards: 50vw - half of card width (130px) */
-      padding-left: calc(50vw - 130px);
-      padding-right: calc(50vw - 130px);
+      /* Center cards: 50vw - half of card width (150px) */
+      padding-left: calc(50vw - 150px);
+      padding-right: calc(50vw - 150px);
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
       -ms-overflow-style: none;
-      overscroll-behavior-x: contain;
     }
 
     .ingredient-hub__carousel::-webkit-scrollbar {
@@ -390,9 +390,14 @@
     }
 
     .ingredient-card {
-      flex: 0 0 260px; /* Smaller cards = more peek visible */
+      flex: 0 0 300px; /* Wider cards for better readability */
       scroll-snap-align: center;
-      scroll-snap-stop: normal;
+      scroll-snap-stop: always;
+    }
+
+    /* Clone cards for infinite loop effect */
+    .ingredient-card.is-clone {
+      pointer-events: none;
     }
   }
 
@@ -783,30 +788,20 @@
     color: var(--hub-gold);
   }
 
-  /* Accepted Range Display */
-  .test-card__range {
+  /* Result group (GEÇTİ + range together) */
+  .test-card__result-group {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    gap: 0.3rem;
-    margin-bottom: 0.5rem;
-    padding: 0.35rem 0.5rem;
-    background: var(--hub-gray-light);
-    border-radius: 0.25rem;
+    gap: 0.15rem;
   }
 
-  .test-card__range-label {
-    font-family: var(--font-family);
-    font-size: 0.6rem;
-    color: var(--hub-text-muted);
-    font-weight: 500;
-  }
-
-  .test-card__range-value {
+  /* Accepted Range - shown inline with result */
+  .test-card__range {
     font-family: var(--font-family);
     font-size: 0.65rem;
-    color: var(--hub-text);
-    font-weight: 600;
+    color: var(--hub-text-muted);
+    font-weight: 500;
   }
 
   /* Animated Progress Bar */
@@ -951,45 +946,143 @@
       const cardId = this.dataset.card;
       const tabName = this.dataset.tab;
 
-      // Update tabs for this card
+      // Update tabs for this card (and its clones)
       section.querySelectorAll(`.ingredient-card__tab[data-card="${cardId}"]`).forEach(t => {
         t.classList.remove('is-active');
         t.setAttribute('aria-selected', 'false');
       });
-      this.classList.add('is-active');
-      this.setAttribute('aria-selected', 'true');
+      // Activate all matching tabs (original + clones)
+      section.querySelectorAll(`.ingredient-card__tab[data-tab="${tabName}"][data-card="${cardId}"]`).forEach(t => {
+        t.classList.add('is-active');
+        t.setAttribute('aria-selected', 'true');
+      });
 
-      // Update panels for this card
+      // Update panels for this card (and clones)
       section.querySelectorAll(`.tab-panel[data-card="${cardId}"]`).forEach(p => {
         p.classList.remove('is-active');
       });
-      const activePanel = section.querySelector(`.tab-panel[data-panel="${tabName}"][data-card="${cardId}"]`);
-      if (activePanel) {
-        activePanel.classList.add('is-active');
+      section.querySelectorAll(`.tab-panel[data-panel="${tabName}"][data-card="${cardId}"]`).forEach(p => {
+        p.classList.add('is-active');
 
         // Re-trigger animations
-        const animatedItems = activePanel.querySelectorAll('[style*="animation-delay"]');
+        const animatedItems = p.querySelectorAll('[style*="animation-delay"]');
         animatedItems.forEach(item => {
           item.style.animation = 'none';
           item.offsetHeight;
           item.style.animation = '';
         });
-      }
+      });
     });
   });
 
-  // Mobile Carousel Dot Indicators
+  // Mobile Infinite Carousel
   const carousel = section.querySelector('.ingredient-hub__carousel');
   const dots = section.querySelectorAll('.carousel-dot');
-  const cards = section.querySelectorAll('.ingredient-card');
+  const originalCards = Array.from(section.querySelectorAll('.ingredient-card:not(.is-clone)'));
+  const cardCount = originalCards.length;
 
-  if (carousel && dots.length > 0 && cards.length > 0) {
-    // Update dots on scroll
+  if (carousel && cardCount > 1 && window.innerWidth < 768) {
+    const gap = 16;
+    let cardWidth = 300 + gap; // card width + gap
+
+    // Clone cards for infinite effect
+    function setupInfiniteCarousel() {
+      // Remove existing clones
+      carousel.querySelectorAll('.is-clone').forEach(c => c.remove());
+
+      // Clone all cards and append/prepend for infinite effect
+      originalCards.forEach((card, i) => {
+        const cloneBefore = card.cloneNode(true);
+        const cloneAfter = card.cloneNode(true);
+        cloneBefore.classList.add('is-clone');
+        cloneAfter.classList.add('is-clone');
+        cloneBefore.setAttribute('data-clone-of', i);
+        cloneAfter.setAttribute('data-clone-of', i);
+        carousel.insertBefore(cloneBefore, carousel.firstChild);
+        carousel.appendChild(cloneAfter);
+      });
+
+      // Set initial scroll position to first real card
+      setTimeout(() => {
+        carousel.scrollLeft = cardCount * cardWidth;
+      }, 10);
+    }
+
+    // Handle infinite scroll looping
+    let isJumping = false;
+    let scrollTimeout;
+
+    function handleScroll() {
+      if (isJumping) return;
+
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        const scrollLeft = carousel.scrollLeft;
+        const totalOriginalWidth = cardCount * cardWidth;
+
+        // Calculate real index (0 to cardCount-1)
+        let realIndex = Math.round((scrollLeft - totalOriginalWidth) / cardWidth);
+        realIndex = ((realIndex % cardCount) + cardCount) % cardCount;
+
+        // Update dots
+        dots.forEach((dot, i) => {
+          dot.classList.toggle('is-active', i === realIndex);
+        });
+
+        // Jump to real cards if we're in clone territory
+        if (scrollLeft <= cardWidth * 0.5) {
+          // Scrolled too far left - jump to end
+          isJumping = true;
+          carousel.style.scrollBehavior = 'auto';
+          carousel.scrollLeft = scrollLeft + totalOriginalWidth;
+          carousel.style.scrollBehavior = '';
+          setTimeout(() => { isJumping = false; }, 50);
+        } else if (scrollLeft >= (cardCount * 2 - 0.5) * cardWidth + totalOriginalWidth) {
+          // Scrolled too far right - jump to start
+          isJumping = true;
+          carousel.style.scrollBehavior = 'auto';
+          carousel.scrollLeft = scrollLeft - totalOriginalWidth;
+          carousel.style.scrollBehavior = '';
+          setTimeout(() => { isJumping = false; }, 50);
+        }
+      }, 100);
+    }
+
+    carousel.addEventListener('scroll', handleScroll, { passive: true });
+
+    // Click dot to scroll to card
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', function() {
+        const targetScroll = (cardCount + index) * cardWidth;
+        carousel.scrollTo({
+          left: targetScroll,
+          behavior: 'smooth'
+        });
+      });
+    });
+
+    // Initialize
+    setupInfiniteCarousel();
+
+    // Reinitialize on resize
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        if (window.innerWidth < 768) {
+          setupInfiniteCarousel();
+        }
+      }, 250);
+    });
+  } else if (carousel && dots.length > 0) {
+    // Desktop or single card - simple dot navigation
     let scrollTimeout;
     carousel.addEventListener('scroll', function() {
       clearTimeout(scrollTimeout);
       scrollTimeout = setTimeout(() => {
-        const cardWidth = cards[0].offsetWidth + 16; // card width + gap
+        const cards = section.querySelectorAll('.ingredient-card:not(.is-clone)');
+        if (cards.length === 0) return;
+        const cardWidth = cards[0].offsetWidth + 16;
         const scrollLeft = carousel.scrollLeft;
         const index = Math.round(scrollLeft / cardWidth);
 
@@ -999,9 +1092,10 @@
       }, 50);
     }, { passive: true });
 
-    // Click dot to scroll to card
     dots.forEach((dot, index) => {
       dot.addEventListener('click', function() {
+        const cards = section.querySelectorAll('.ingredient-card:not(.is-clone)');
+        if (cards.length === 0) return;
         const cardWidth = cards[0].offsetWidth + 16;
         carousel.scrollTo({
           left: index * cardWidth,
