@@ -1,8 +1,8 @@
 {% comment %}
   Ingredient Science Hub v2
   - Image/name at TOP of card
-  - Black, white, gold (#D4AF37) color scheme
-  - Mobile: Horizontal carousel with peek effect
+  - Black & white color scheme with green accents
+  - Mobile: Horizontal carousel with peek effect + Apple-style dots
   - Desktop: Grid layout
 {% endcomment %}
 
@@ -293,24 +293,16 @@
         {% endfor %}
       </div>
 
-      {%- comment -%} Carousel Navigation (Mobile Only) {%- endcomment -%}
+      {%- comment -%} Carousel Dots (Mobile Only) {%- endcomment -%}
       {% if section.blocks.size > 1 %}
-        <div class="carousel-nav">
-          <span class="carousel-counter">
-            <span class="carousel-counter__current">1</span>
-            <span class="carousel-counter__sep">/</span>
-            <span class="carousel-counter__total">{{ section.blocks.size }}</span>
-          </span>
-          <div class="carousel-dots" aria-label="Carousel navigation">
-            {% for block in section.blocks %}
-              <button
-                class="carousel-dot {% if forloop.first %}is-active{% endif %}"
-                data-index="{{ forloop.index0 }}"
-                aria-label="İçerik {{ forloop.index }} / {{ section.blocks.size }}"
-              ></button>
-            {% endfor %}
-          </div>
-          <span class="carousel-hint">Kaydır →</span>
+        <div class="carousel-dots" aria-label="Carousel navigation">
+          {% for block in section.blocks %}
+            <button
+              class="carousel-dot {% if forloop.first %}is-active{% endif %}"
+              data-index="{{ forloop.index0 }}"
+              aria-label="İçerik {{ forloop.index }} / {{ section.blocks.size }}"
+            ></button>
+          {% endfor %}
         </div>
       {% endif %}
     {% else %}
@@ -327,10 +319,6 @@
      ============================================ */
 
   #ingredient-hub-{{ section.id }} {
-    /* Gold - Only for highlights */
-    --hub-gold: #D4AF37;
-    --hub-gold-light: rgba(212, 175, 55, 0.08);
-
     /* Black & White - Primary palette */
     --hub-black: #000000;
     --hub-white: #FFFFFF;
@@ -374,20 +362,11 @@
 
   .ingredient-hub__subtitle {
     font-family: var(--font-family);
-    display: inline-block;
-    margin: 0 auto 2.5rem;
-    padding: 0.5rem 1rem;
-    background: var(--hub-success-light);
-    color: var(--hub-success);
-    font-size: 0.875rem;
-    font-weight: 600;
-    border-radius: 2rem;
-    border: 1px solid var(--hub-success);
-  }
-
-  .ingredient-hub__title + .ingredient-hub__subtitle {
-    display: block;
-    width: fit-content;
+    text-align: center;
+    color: var(--hub-text-muted);
+    font-size: 1rem;
+    font-weight: 400;
+    margin-bottom: 2rem;
   }
 
   /* ============================================
@@ -511,10 +490,14 @@
 
   .ingredient-card__tagline {
     font-family: var(--font-family);
-    font-size: 0.9rem;
-    color: var(--hub-text);
-    margin: 0;
+    display: inline-block;
+    margin-top: 0.375rem;
+    padding: 0.25rem 0.75rem;
+    background: var(--hub-success-light);
+    color: var(--hub-success);
+    font-size: 0.75rem;
     font-weight: 600;
+    border-radius: 1rem;
   }
 
   /* ============================================
@@ -534,9 +517,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.4rem;
-    padding: 0.875rem 0.5rem;
-    font-size: 0.8125rem;
+    gap: 0.35rem;
+    padding: 0.75rem 0.25rem;
+    font-size: 0.7rem;
     font-weight: 500;
     color: var(--hub-text-muted);
     background: transparent;
@@ -570,12 +553,12 @@
     left: 15%;
     right: 15%;
     height: 2px;
-    background: var(--hub-gold);
+    background: var(--hub-black);
     border-radius: 2px 2px 0 0;
   }
 
   .ingredient-card__tab:focus-visible {
-    outline: 2px solid var(--hub-gold);
+    outline: 2px solid var(--hub-black);
     outline-offset: -2px;
     border-radius: 2px;
   }
@@ -681,7 +664,7 @@
   }
 
   .article-card:focus-visible {
-    outline: 2px solid var(--hub-gold);
+    outline: 2px solid var(--hub-black);
     outline-offset: 2px;
   }
 
@@ -819,7 +802,7 @@
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: var(--hub-gold);
+    background: var(--hub-black);
   }
 
   .test-card__name {
@@ -891,7 +874,7 @@
   .test-card__progress-bar {
     height: 100%;
     width: var(--progress, 100%);
-    background: linear-gradient(90deg, var(--hub-black) 0%, var(--hub-gold) 100%);
+    background: linear-gradient(90deg, var(--hub-black) 0%, var(--hub-black) 100%);
     border-radius: 2px;
     transform: scaleX(0);
     transform-origin: left;
@@ -968,52 +951,21 @@
   }
 
   /* ============================================
-     CAROUSEL NAVIGATION
+     CAROUSEL DOTS (Apple-style)
      ============================================ */
 
-  .carousel-nav {
+  .carousel-dots {
     display: none;
-    align-items: center;
     justify-content: center;
-    gap: 1rem;
-    padding: 1rem 1rem 0.5rem;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 0;
   }
 
   @media (max-width: 767px) {
-    .carousel-nav {
+    .carousel-dots {
       display: flex;
     }
-  }
-
-  .carousel-counter {
-    font-family: var(--font-family);
-    font-size: 0.8125rem;
-    font-weight: 600;
-    color: var(--hub-text);
-    font-variant-numeric: tabular-nums;
-  }
-
-  .carousel-counter__sep {
-    color: var(--hub-text-muted);
-    margin: 0 0.125rem;
-  }
-
-  .carousel-hint {
-    font-family: var(--font-family);
-    font-size: 0.75rem;
-    color: var(--hub-text-muted);
-    animation: hintPulse 2s ease-in-out 3;
-  }
-
-  @keyframes hintPulse {
-    0%, 100% { opacity: 0.6; }
-    50% { opacity: 1; }
-  }
-
-  .carousel-dots {
-    display: flex;
-    justify-content: center;
-    gap: 0.5rem;
   }
 
   .carousel-dot {
@@ -1047,7 +999,7 @@
   }
 
   .carousel-dot:focus-visible {
-    outline: 2px solid var(--hub-gold);
+    outline: 2px solid var(--hub-black);
     outline-offset: 4px;
   }
 
@@ -1201,7 +1153,6 @@
   // Mobile Infinite Carousel
   const carousel = section.querySelector('.ingredient-hub__carousel');
   const dots = section.querySelectorAll('.carousel-dot');
-  const counterCurrent = section.querySelector('.carousel-counter__current');
   const originalCards = Array.from(section.querySelectorAll('.ingredient-card:not(.is-clone)'));
   const cardCount = originalCards.length;
   const mobileQuery = window.matchMedia('(max-width: 767px)');
@@ -1249,15 +1200,11 @@
         let realIndex = Math.round((scrollLeft - totalOriginalWidth) / cardWidth);
         realIndex = ((realIndex % cardCount) + cardCount) % cardCount;
 
-        // Update dots and counter
+        // Update dots
         dots.forEach((dot, i) => {
           const isActive = i === realIndex;
           dot.classList.toggle('is-active', isActive);
-          dot.setAttribute('aria-selected', isActive ? 'true' : 'false');
         });
-        if (counterCurrent) {
-          counterCurrent.textContent = realIndex + 1;
-        }
 
         // Jump to real cards if we're in clone territory
         if (scrollLeft <= cardWidth * 0.5) {
@@ -1317,9 +1264,7 @@
         const index = Math.round(scrollLeft / cardWidth);
 
         dots.forEach((dot, i) => {
-          const isActive = i === index;
-          dot.classList.toggle('is-active', isActive);
-          dot.setAttribute('aria-selected', isActive ? 'true' : 'false');
+          dot.classList.toggle('is-active', i === index);
         });
       }, 50);
     }, { passive: true });
