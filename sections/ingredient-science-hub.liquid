@@ -1,9 +1,10 @@
 {% comment %}
-  Ingredient Science Hub v2
-  - Image/name at TOP of card
-  - Black & white color scheme with green accents
-  - Mobile: Horizontal carousel with peek effect + Apple-style dots
-  - Desktop: Grid layout
+  Ingredient Science Hub v4
+  - Luxury/refined aesthetic with Bodoni Moda + Jost typography
+  - Liquid glass design with gold accents
+  - Fluid animations and elegant micro-interactions
+  - Mobile: Horizontal carousel with peek effect
+  - Desktop: Elegant grid layout
 {% endcomment %}
 
 <section
@@ -12,14 +13,30 @@
   data-section-id="{{ section.id }}"
   data-card-count="{{ section.blocks.size }}"
 >
-  <div class="ingredient-hub__container">
-    {% if section.settings.title != blank %}
-      <h2 class="ingredient-hub__title">{{ section.settings.title }}</h2>
-    {% endif %}
+  {%- comment -%} Decorative Background Elements {%- endcomment -%}
+  <div class="ingredient-hub__bg">
+    <div class="ingredient-hub__glow ingredient-hub__glow--1"></div>
+    <div class="ingredient-hub__glow ingredient-hub__glow--2"></div>
+  </div>
 
-    {% if section.settings.subtitle != blank %}
-      <p class="ingredient-hub__subtitle">{{ section.settings.subtitle }}</p>
-    {% endif %}
+  <div class="ingredient-hub__container">
+    <header class="ingredient-hub__header">
+      {% if section.settings.title != blank %}
+        <h2 class="ingredient-hub__title">{{ section.settings.title }}</h2>
+      {% endif %}
+
+      {% if section.settings.subtitle != blank %}
+        <p class="ingredient-hub__subtitle">{{ section.settings.subtitle }}</p>
+      {% endif %}
+
+      <div class="ingredient-hub__divider">
+        <span class="ingredient-hub__divider-line"></span>
+        <svg class="ingredient-hub__divider-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 3L14.5 8.5L20.5 9.27L16.25 13.4L17.18 19.36L12 16.77L6.82 19.36L7.75 13.4L3.5 9.27L9.5 8.5L12 3Z" fill="currentColor"/>
+        </svg>
+        <span class="ingredient-hub__divider-line"></span>
+      </div>
+    </header>
 
     {% if section.blocks.size > 0 %}
       <div class="ingredient-hub__carousel">
@@ -32,10 +49,11 @@
                 data-index="{{ forloop.index0 }}"
                 {{ block.shopify_attributes }}
               >
-                {%- comment -%} Ingredient Header (Image & Info) - NOW AT TOP {%- endcomment -%}
-                <div class="ingredient-card__header">
+                {%- comment -%} Floating Image Hero {%- endcomment -%}
+                <div class="ingredient-card__hero">
                   {% if block.settings.image != blank %}
-                    <div class="ingredient-card__image-wrapper">
+                    <div class="ingredient-card__image-container">
+                      <div class="ingredient-card__image-glow"></div>
                       <img
                         src="{{ block.settings.image | image_url: width: 400 }}"
                         srcset="
@@ -43,17 +61,17 @@
                           {{ block.settings.image | image_url: width: 300 }} 300w,
                           {{ block.settings.image | image_url: width: 400 }} 400w
                         "
-                        sizes="(max-width: 768px) 120px, 140px"
+                        sizes="(max-width: 768px) 140px, 160px"
                         alt="{{ block.settings.name | escape }}"
                         class="ingredient-card__image"
                         loading="lazy"
-                        width="140"
-                        height="140"
+                        width="160"
+                        height="160"
                       >
                     </div>
                   {% endif %}
 
-                  <div class="ingredient-card__info">
+                  <div class="ingredient-card__identity">
                     <h3 class="ingredient-card__name">{{ block.settings.name }}</h3>
                     {% if block.settings.tagline != blank %}
                       <p class="ingredient-card__tagline">{{ block.settings.tagline }}</p>
@@ -61,7 +79,7 @@
                   </div>
                 </div>
 
-                {%- comment -%} Tab Navigation {%- endcomment -%}
+                {%- comment -%} Elegant Tab Navigation {%- endcomment -%}
                 <nav class="ingredient-card__tabs" role="tablist">
                   <button
                     class="ingredient-card__tab is-active"
@@ -72,10 +90,7 @@
                     data-tab="benefits"
                     data-card="{{ block.id }}"
                   >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                      <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
-                    </svg>
-                    <span>Faydalar</span>
+                    <span class="ingredient-card__tab-text">Faydalar</span>
                   </button>
                   <button
                     class="ingredient-card__tab"
@@ -86,13 +101,7 @@
                     data-tab="articles"
                     data-card="{{ block.id }}"
                   >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                      <polyline points="14,2 14,8 20,8"/>
-                      <line x1="16" y1="13" x2="8" y2="13"/>
-                      <line x1="16" y1="17" x2="8" y2="17"/>
-                    </svg>
-                    <span>Makaleler</span>
+                    <span class="ingredient-card__tab-text">Araştırmalar</span>
                   </button>
                   <button
                     class="ingredient-card__tab"
@@ -103,17 +112,14 @@
                     data-tab="tests"
                     data-card="{{ block.id }}"
                   >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                      <path d="M9 12l2 2 4-4"/>
-                      <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
-                    </svg>
-                    <span>Test Sonuçları</span>
+                    <span class="ingredient-card__tab-text">Laboratuvar</span>
                   </button>
+                  <span class="ingredient-card__tab-indicator"></span>
                 </nav>
 
-                {%- comment -%} Tab Content Area {%- endcomment -%}
+                {%- comment -%} Content Panels {%- endcomment -%}
                 <div class="ingredient-card__content">
-                  {%- comment -%} Benefits Tab {%- endcomment -%}
+                  {%- comment -%} Benefits Panel {%- endcomment -%}
                   <div
                     class="tab-panel is-active"
                     role="tabpanel"
@@ -123,26 +129,21 @@
                     data-card="{{ block.id }}"
                     tabindex="0"
                   >
-                    <div class="benefits-list">
+                    <ul class="benefits-list">
                       {% assign benefits = block.settings.benefits | newline_to_br | split: '<br />' %}
                       {% for benefit in benefits %}
                         {% assign benefit_text = benefit | strip %}
                         {% if benefit_text != blank %}
-                          <div class="benefit-item" style="animation-delay: {{ forloop.index | times: 0.1 }}s">
-                            <div class="benefit-item__icon">
-                              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                                <polyline points="22 4 12 14.01 9 11.01"/>
-                              </svg>
-                            </div>
+                          <li class="benefit-item" style="--delay: {{ forloop.index | times: 0.08 }}s">
+                            <span class="benefit-item__marker"></span>
                             <span class="benefit-item__text">{{ benefit_text }}</span>
-                          </div>
+                          </li>
                         {% endif %}
                       {% endfor %}
-                    </div>
+                    </ul>
                   </div>
 
-                  {%- comment -%} Articles Tab {%- endcomment -%}
+                  {%- comment -%} Articles Panel {%- endcomment -%}
                   <div
                     class="tab-panel"
                     role="tabpanel"
@@ -166,38 +167,28 @@
                             target="_blank"
                             rel="noopener noreferrer"
                             class="article-card"
-                            style="animation-delay: {{ forloop.index | times: 0.15 }}s"
+                            style="--delay: {{ forloop.index | times: 0.1 }}s"
                           >
-                            <div class="article-card__icon">
-                              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                                <polyline points="14,2 14,8 20,8"/>
-                              </svg>
-                            </div>
-                            <div class="article-card__content">
+                            <div class="article-card__body">
                               <h4 class="article-card__title">{{ article_title }}</h4>
                               {% if article_source != blank %}
                                 <span class="article-card__source">{{ article_source }}</span>
                               {% endif %}
                             </div>
-                            <div class="article-card__arrow">
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-                                <polyline points="15 3 21 3 21 9"/>
-                                <line x1="10" y1="14" x2="21" y2="3"/>
-                              </svg>
-                            </div>
+                            <svg class="article-card__arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                              <path d="M7 17L17 7M17 7H7M17 7V17"/>
+                            </svg>
                             <span class="visually-hidden">(yeni sekmede açılır)</span>
                           </a>
                         {% endif %}
                       {% endfor %}
                       {% if articles.size == 0 or block.settings.articles == blank %}
-                        <p class="empty-state">Henüz makale eklenmedi.</p>
+                        <p class="empty-state">Henüz araştırma eklenmedi.</p>
                       {% endif %}
                     </div>
                   </div>
 
-                  {%- comment -%} Test Results Tab {%- endcomment -%}
+                  {%- comment -%} Test Results Panel {%- endcomment -%}
                   <div
                     class="tab-panel"
                     role="tabpanel"
@@ -208,85 +199,73 @@
                     tabindex="0"
                   >
                     <div class="test-results">
-                      <div class="test-cards-grid">
-                        {% assign tests = block.settings.test_results | newline_to_br | split: '<br />' %}
-                        {% for test in tests %}
-                          {% assign test_text = test | strip %}
-                          {% if test_text != blank %}
-                            {% assign test_parts = test_text | split: '|' %}
-                            {% assign test_name = test_parts[0] | strip %}
-                            {% assign test_result = test_parts[1] | strip %}
-                            {% assign test_percent = test_parts[2] | strip | default: '100' %}
+                      {% assign tests = block.settings.test_results | newline_to_br | split: '<br />' %}
+                      {% for test in tests %}
+                        {% assign test_text = test | strip %}
+                        {% if test_text != blank %}
+                          {% assign test_parts = test_text | split: '|' %}
+                          {% assign test_name = test_parts[0] | strip %}
+                          {% assign test_result = test_parts[1] | strip %}
+                          {% assign test_percent = test_parts[2] | strip | default: '100' %}
+                          {% assign test_range = test_parts[3] | strip %}
 
-                            {% assign test_range = test_parts[3] | strip %}
-
-                            <div class="test-card" style="animation-delay: {{ forloop.index | times: 0.15 }}s">
-                              <div class="test-card__header">
-                                <div class="test-card__indicator"></div>
-                                <h5 class="test-card__name">{{ test_name }}</h5>
-                              </div>
-
-                              <div class="test-card__status">
-                                {% if test_result == 'GEÇTİ' or test_result == 'PASS' %}
-                                  <svg class="test-card__check" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                                    <polyline points="22 4 12 14.01 9 11.01"/>
+                          <div class="test-item" style="--delay: {{ forloop.index | times: 0.12 }}s">
+                            <div class="test-item__header">
+                              <span class="test-item__name">{{ test_name }}</span>
+                              {% if test_result == 'GEÇTİ' or test_result == 'PASS' %}
+                                <span class="test-item__badge test-item__badge--pass">
+                                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+                                    <polyline points="20 6 9 17 4 12"/>
                                   </svg>
-                                  <div class="test-card__result-group">
-                                    <span class="test-card__result test-card__result--pass">GEÇTİ</span>
-                                    {% if test_range != blank %}
-                                      <span class="test-card__range">({{ test_range }})</span>
-                                    {% endif %}
-                                  </div>
-                                {% else %}
-                                  <span class="test-card__result">{{ test_result }}</span>
-                                  {% if test_range != blank %}
-                                    <span class="test-card__range">({{ test_range }})</span>
-                                  {% endif %}
-                                {% endif %}
-                              </div>
+                                  GEÇTİ
+                                </span>
+                              {% else %}
+                                <span class="test-item__badge">{{ test_result }}</span>
+                              {% endif %}
+                            </div>
+                            <div class="test-item__bar">
+                              <div class="test-item__progress" style="--progress: {{ test_percent }}%"></div>
+                            </div>
+                            <div class="test-item__footer">
+                              <span class="test-item__percent">%{{ test_percent }}</span>
+                              {% if test_range != blank %}
+                                <span class="test-item__range">{{ test_range }}</span>
+                              {% endif %}
+                            </div>
+                          </div>
+                        {% endif %}
+                      {% endfor %}
 
-                              <div class="test-card__progress">
-                                <div class="test-card__progress-bar" style="--progress: {{ test_percent }}%"></div>
-                              </div>
-
-                              <div class="test-card__percent">%{{ test_percent }}</div>
+                      {%- comment -%} Certification {%- endcomment -%}
+                      {% if block.settings.certification != blank or block.settings.test_date != blank %}
+                        <div class="test-footer">
+                          {% if block.settings.certification != blank %}
+                            <div class="test-footer__item">
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                                <circle cx="12" cy="8" r="6"/>
+                                <path d="M8.21 13.89L7 21l5-3 5 3-1.21-7.11"/>
+                              </svg>
+                              <span>{{ block.settings.certification }}</span>
                             </div>
                           {% endif %}
-                        {% endfor %}
-                      </div>
-
-                      {%- comment -%} Certification Footer {%- endcomment -%}
-                      <div class="test-results__footer">
-                        {% if block.settings.certification != blank %}
-                          <div class="certification-badge">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                              <circle cx="12" cy="8" r="7"/>
-                              <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>
-                            </svg>
-                            <span>{{ block.settings.certification }}</span>
-                          </div>
-                        {% endif %}
-
-                        {% if block.settings.test_date != blank %}
-                          <div class="test-date">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                              <line x1="16" y1="2" x2="16" y2="6"/>
-                              <line x1="8" y1="2" x2="8" y2="6"/>
-                              <line x1="3" y1="10" x2="21" y2="10"/>
-                            </svg>
-                            <span>{{ block.settings.test_date }}</span>
-                          </div>
-                        {% endif %}
-                      </div>
-
-                      {%- comment -%} Contact Note {%- endcomment -%}
-                      <div class="test-results__note">
-                        <span>*</span> Detaylı analiz raporları için <strong class="test-results__email">info@cyrasoul.com</strong> adresine mail atabilirsiniz.
-                      </div>
+                          {% if block.settings.test_date != blank %}
+                            <div class="test-footer__item">
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                                <rect x="3" y="4" width="18" height="18" rx="2"/>
+                                <path d="M16 2v4M8 2v4M3 10h18"/>
+                              </svg>
+                              <span>{{ block.settings.test_date }}</span>
+                            </div>
+                          {% endif %}
+                        </div>
+                      {% endif %}
                     </div>
                   </div>
+                </div>
+
+                {%- comment -%} Card Footer {%- endcomment -%}
+                <div class="ingredient-card__footer">
+                  <span class="ingredient-card__note">Detaylı analiz için iletişime geçin</span>
                 </div>
               </article>
           {% endcase %}
@@ -315,93 +294,174 @@
 
 <style>
   /* ============================================
-     INGREDIENT SCIENCE HUB v2 - GOLD/BLACK/WHITE
+     INGREDIENT SCIENCE HUB v4
+     Luxury/Refined Design with Liquid Glass
      ============================================ */
 
+  /* Google Fonts */
+  @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Jost:wght@300;400;500;600&display=swap');
+
   #ingredient-hub-{{ section.id }} {
-    /* Black & White - Primary palette */
-    --hub-black: #000000;
+    /* Premium Color Palette */
+    --hub-black: #1C1917;
+    --hub-black-soft: #292524;
+    --hub-stone: #44403C;
+    --hub-stone-light: #78716C;
+    --hub-gold: #CA8A04;
+    --hub-gold-light: rgba(202, 138, 4, 0.15);
+    --hub-gold-glow: rgba(202, 138, 4, 0.4);
+    --hub-cream: #FAFAF9;
     --hub-white: #FFFFFF;
-    --hub-gray: #333333;
-    --hub-gray-light: rgba(0, 0, 0, 0.04);
-    --hub-gray-medium: rgba(0, 0, 0, 0.08);
-    --hub-text: #000000;
-    --hub-text-muted: rgba(0, 0, 0, 0.56); /* 4.5:1 contrast ratio */
-    --hub-bg: {{ section.settings.background_color }};
-    --hub-card-bg: #FFFFFF;
-    --hub-border: rgba(0, 0, 0, 0.1);
-    --hub-surface: #F8F8F8;
-    --hub-surface-hover: #F0F0F0;
-    --hub-surface-subtle: #FAFAFA;
-    --hub-success: #16A34A;
-    --hub-success-light: rgba(22, 163, 74, 0.1);
+    --hub-border: rgba(28, 25, 23, 0.08);
+    --hub-border-subtle: rgba(28, 25, 23, 0.04);
+    --hub-glass: rgba(255, 255, 255, 0.7);
+    --hub-glass-border: rgba(255, 255, 255, 0.5);
+    --hub-success: #15803D;
+    --hub-success-light: rgba(21, 128, 61, 0.1);
 
-    /* Standardized Typography */
-    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    /* Typography */
+    --font-display: 'Bodoni Moda', 'Playfair Display', Georgia, serif;
+    --font-body: 'Jost', 'Inter', -apple-system, sans-serif;
 
+    /* Spacing */
+    --space-xs: 0.5rem;
+    --space-sm: 0.75rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --space-2xl: 3rem;
+
+    /* Animation */
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --duration-fast: 200ms;
+    --duration-normal: 350ms;
+    --duration-slow: 500ms;
+
+    position: relative;
     padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;
-    background: var(--hub-bg);
-    font-family: var(--font-family);
-  }
-
-  .ingredient-hub__container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1rem;
-  }
-
-  .ingredient-hub__title {
-    font-family: var(--font-family);
-    font-size: clamp(1.75rem, 4vw, 2.5rem);
-    font-weight: 700;
-    text-align: center;
-    text-wrap: balance;
-    margin-bottom: 0.5rem;
-    color: var(--hub-text);
-  }
-
-  .ingredient-hub__subtitle {
-    font-family: var(--font-family);
-    text-align: center;
-    color: var(--hub-text-muted);
-    font-size: 1rem;
-    font-weight: 400;
-    margin-bottom: 2rem;
+    background: var(--hub-cream);
+    font-family: var(--font-body);
+    overflow: hidden;
   }
 
   /* ============================================
-     CAROUSEL CONTAINER
+     DECORATIVE BACKGROUND
+     ============================================ */
+
+  .ingredient-hub__bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .ingredient-hub__glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.5;
+  }
+
+  .ingredient-hub__glow--1 {
+    width: 400px;
+    height: 400px;
+    background: var(--hub-gold-light);
+    top: -100px;
+    right: -100px;
+  }
+
+  .ingredient-hub__glow--2 {
+    width: 300px;
+    height: 300px;
+    background: rgba(120, 113, 108, 0.1);
+    bottom: -50px;
+    left: -50px;
+  }
+
+  /* ============================================
+     CONTAINER & HEADER
+     ============================================ */
+
+  .ingredient-hub__container {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+  }
+
+  .ingredient-hub__header {
+    text-align: center;
+    margin-bottom: var(--space-2xl);
+  }
+
+  .ingredient-hub__title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    color: var(--hub-black);
+    margin: 0 0 var(--space-sm);
+  }
+
+  .ingredient-hub__subtitle {
+    font-family: var(--font-body);
+    font-size: 1.125rem;
+    font-weight: 300;
+    color: var(--hub-stone);
+    letter-spacing: 0.02em;
+    margin: 0;
+  }
+
+  .ingredient-hub__divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-md);
+    margin-top: var(--space-lg);
+  }
+
+  .ingredient-hub__divider-line {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--hub-gold), transparent);
+  }
+
+  .ingredient-hub__divider-icon {
+    color: var(--hub-gold);
+    opacity: 0.8;
+  }
+
+  /* ============================================
+     CAROUSEL
      ============================================ */
 
   .ingredient-hub__carousel {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: var(--space-xl);
   }
 
-  /* Mobile: Horizontal Infinite Carousel */
   @media (max-width: 767px) {
     .ingredient-hub__container {
       padding: 0;
     }
 
-    .ingredient-hub__title,
-    .ingredient-hub__subtitle {
-      padding: 0 1rem;
+    .ingredient-hub__header {
+      padding: 0 var(--space-md);
     }
 
     .ingredient-hub__carousel {
       display: flex;
-      align-items: flex-start; /* Cards have independent heights */
+      align-items: flex-start;
       overflow-x: auto;
       scroll-snap-type: x mandatory;
-      gap: 12px;
-      /* More peek: show ~40px of adjacent cards */
-      padding-left: calc(50vw - 130px);
-      padding-right: calc(50vw - 130px);
+      gap: var(--space-md);
+      padding-left: calc(50vw - 150px);
+      padding-right: calc(50vw - 150px);
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
-      -ms-overflow-style: none;
       touch-action: pan-x pinch-zoom;
     }
 
@@ -410,299 +470,327 @@
     }
 
     .ingredient-card {
-      flex: 0 0 260px; /* Narrower for more peek visibility */
+      flex: 0 0 300px;
       scroll-snap-align: center;
       scroll-snap-stop: always;
     }
 
-    /* Clone cards for infinite loop effect */
     .ingredient-card.is-clone {
       pointer-events: none;
     }
   }
 
   /* ============================================
-     INGREDIENT CARD
+     INGREDIENT CARD - Liquid Glass Design
      ============================================ */
 
   .ingredient-card {
-    background: var(--hub-card-bg);
-    border-radius: 1.25rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    border: 1px solid var(--hub-border);
+    position: relative;
+    background: var(--hub-glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 24px;
+    border: 1px solid var(--hub-glass-border);
+    box-shadow:
+      0 4px 24px rgba(28, 25, 23, 0.06),
+      0 1px 2px rgba(28, 25, 23, 0.04),
+      inset 0 1px 0 rgba(255, 255, 255, 0.6);
     overflow: hidden;
-    transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
+    transition:
+      transform var(--duration-normal) var(--ease-out-expo),
+      box-shadow var(--duration-normal) var(--ease-out-expo);
+  }
+
+  @supports not (backdrop-filter: blur(20px)) {
+    .ingredient-card {
+      background: rgba(255, 255, 255, 0.95);
+    }
   }
 
   @media (min-width: 768px) {
     .ingredient-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+      transform: translateY(-8px);
+      box-shadow:
+        0 20px 40px rgba(28, 25, 23, 0.12),
+        0 8px 16px rgba(28, 25, 23, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
     }
   }
 
   /* ============================================
-     CARD HEADER (Image & Info) - NOW AT TOP
+     CARD HERO - Floating Image
      ============================================ */
 
-  .ingredient-card__header {
+  .ingredient-card__hero {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 1.5rem 1.5rem 1rem;
+    padding: var(--space-xl) var(--space-lg) var(--space-lg);
     text-align: center;
-    background: linear-gradient(180deg, var(--hub-surface-subtle) 0%, var(--hub-white) 100%);
-    border-bottom: 1px solid var(--hub-border);
   }
 
-  .ingredient-card__image-wrapper {
-    width: 100px;
-    height: 100px;
-    margin-bottom: 0.75rem;
+  .ingredient-card__image-container {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    margin-bottom: var(--space-md);
+  }
+
+  .ingredient-card__image-glow {
+    position: absolute;
+    inset: -20px;
+    background: radial-gradient(circle, var(--hub-gold-glow) 0%, transparent 70%);
     border-radius: 50%;
-    overflow: hidden;
-    background: var(--hub-white);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-    border: 2px solid var(--hub-gray-medium);
+    opacity: 0;
+    transition: opacity var(--duration-slow) var(--ease-out-expo);
+  }
+
+  .ingredient-card:hover .ingredient-card__image-glow {
+    opacity: 1;
   }
 
   .ingredient-card__image {
+    position: relative;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.25s ease-out;
+    border-radius: 50%;
+    box-shadow:
+      0 8px 32px rgba(28, 25, 23, 0.15),
+      0 2px 8px rgba(28, 25, 23, 0.1);
+    transition: transform var(--duration-normal) var(--ease-out-back);
   }
 
   .ingredient-card:hover .ingredient-card__image {
-    transform: scale(1.05);
+    transform: scale(1.05) translateY(-4px);
   }
 
-  .ingredient-card__info {
-    text-align: center;
+  .ingredient-card__identity {
+    position: relative;
   }
 
   .ingredient-card__name {
-    font-family: var(--font-family);
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--hub-text);
-    margin: 0 0 0.25rem 0;
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--hub-black);
+    margin: 0 0 var(--space-xs);
   }
 
   .ingredient-card__tagline {
-    font-family: var(--font-family);
-    display: inline-block;
-    margin-top: 0.375rem;
-    padding: 0.25rem 0.75rem;
-    background: var(--hub-success-light);
-    color: var(--hub-success);
-    font-size: 0.75rem;
-    font-weight: 600;
-    border-radius: 1rem;
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: var(--hub-gold);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin: 0;
   }
 
   /* ============================================
-     TAB NAVIGATION
+     TAB NAVIGATION - Elegant Underline
      ============================================ */
 
   .ingredient-card__tabs {
+    position: relative;
     display: flex;
+    border-top: 1px solid var(--hub-border);
     border-bottom: 1px solid var(--hub-border);
-    background: var(--hub-white);
-    touch-action: manipulation;
+    background: rgba(250, 250, 249, 0.5);
   }
 
   .ingredient-card__tab {
-    font-family: var(--font-family);
     flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.35rem;
-    padding: 0.75rem 0.25rem;
-    font-size: 0.7rem;
+    position: relative;
+    padding: var(--space-md) var(--space-xs);
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
     font-weight: 500;
-    color: var(--hub-text-muted);
+    letter-spacing: 0.02em;
+    color: var(--hub-stone-light);
     background: transparent;
     border: none;
     cursor: pointer;
-    transition: color 0.15s ease-out, background-color 0.15s ease-out;
-    position: relative;
+    transition: color var(--duration-fast) ease;
     -webkit-tap-highlight-color: transparent;
   }
 
-  .ingredient-card__tab svg {
-    flex-shrink: 0;
-    width: 14px;
-    height: 14px;
-  }
-
   .ingredient-card__tab:hover {
-    color: var(--hub-text);
-    background: var(--hub-gray-light);
+    color: var(--hub-black);
   }
 
   .ingredient-card__tab.is-active {
     color: var(--hub-black);
-    font-weight: 600;
   }
 
-  .ingredient-card__tab.is-active::after {
-    content: '';
+  .ingredient-card__tab-text {
+    position: relative;
+    z-index: 1;
+  }
+
+  .ingredient-card__tab-indicator {
     position: absolute;
     bottom: -1px;
-    left: 15%;
-    right: 15%;
+    left: 0;
+    width: calc(100% / 3);
     height: 2px;
-    background: var(--hub-black);
-    border-radius: 2px 2px 0 0;
+    background: var(--hub-gold);
+    transition: transform var(--duration-normal) var(--ease-out-expo);
   }
 
+  .ingredient-card__tab:nth-child(1).is-active ~ .ingredient-card__tab-indicator { transform: translateX(0); }
+  .ingredient-card__tab:nth-child(2).is-active ~ .ingredient-card__tab-indicator { transform: translateX(100%); }
+  .ingredient-card__tab:nth-child(3).is-active ~ .ingredient-card__tab-indicator { transform: translateX(200%); }
+
   .ingredient-card__tab:focus-visible {
-    outline: 2px solid var(--hub-black);
+    outline: 2px solid var(--hub-gold);
     outline-offset: -2px;
     border-radius: 2px;
   }
 
   /* ============================================
-     TAB CONTENT - Dynamic height based on content
+     TAB CONTENT
      ============================================ */
 
   .ingredient-card__content {
-    padding: 1rem;
+    padding: var(--space-lg);
+    min-height: 200px;
   }
 
   .tab-panel {
     display: none;
-    animation: fadeIn 0.25s ease-out;
+    animation: fadeSlideIn var(--duration-normal) var(--ease-out-expo);
   }
 
   .tab-panel.is-active {
     display: block;
   }
 
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
+  @keyframes fadeSlideIn {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   /* ============================================
-     BENEFITS TAB
+     BENEFITS LIST
      ============================================ */
 
   .benefits-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.625rem;
+    gap: var(--space-sm);
   }
 
   .benefit-item {
     display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.625rem 0.875rem;
-    background: var(--hub-white);
-    border-radius: 0.5rem;
-    border: 1px solid var(--hub-border);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    align-items: flex-start;
+    gap: var(--space-sm);
     opacity: 0;
-    animation: slideInBenefit 0.25s ease-out forwards;
+    animation: benefitReveal var(--duration-normal) var(--ease-out-expo) forwards;
+    animation-delay: var(--delay, 0s);
   }
 
-  @keyframes slideInBenefit {
-    from { opacity: 0; transform: translateX(-10px); }
-    to { opacity: 1; transform: translateX(0); }
+  @keyframes benefitReveal {
+    from {
+      opacity: 0;
+      transform: translateX(-12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
   }
 
-  .benefit-item__icon {
+  .benefit-item__marker {
     flex-shrink: 0;
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--hub-success-light);
+    width: 6px;
+    height: 6px;
+    margin-top: 8px;
     border-radius: 50%;
-    color: var(--hub-success);
-  }
-
-  .benefit-item__icon svg {
-    width: 14px;
-    height: 14px;
+    background: var(--hub-gold);
   }
 
   .benefit-item__text {
-    font-family: var(--font-family);
-    font-size: 0.9rem;
-    color: var(--hub-text);
-    font-weight: 500;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--hub-black-soft);
   }
 
   /* ============================================
-     ARTICLES TAB
+     ARTICLES LIST
      ============================================ */
 
   .articles-list {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: var(--space-sm);
   }
 
   .article-card {
     display: flex;
     align-items: center;
-    gap: 0.875rem;
-    padding: 0.875rem;
-    background: var(--hub-surface);
-    border-radius: 0.625rem;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    background: var(--hub-white);
+    border-radius: 12px;
+    border: 1px solid var(--hub-border);
     text-decoration: none;
     color: inherit;
-    transition: background-color 0.15s ease-out, transform 0.15s ease-out;
+    cursor: pointer;
     opacity: 0;
-    animation: slideUpArticle 0.25s ease-out forwards;
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
+    animation: articleReveal var(--duration-normal) var(--ease-out-expo) forwards;
+    animation-delay: var(--delay, 0s);
+    transition:
+      background-color var(--duration-fast) ease,
+      border-color var(--duration-fast) ease,
+      transform var(--duration-fast) ease;
   }
 
-  .article-card:focus-visible {
-    outline: 2px solid var(--hub-black);
-    outline-offset: 2px;
-  }
-
-  @keyframes slideUpArticle {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
+  @keyframes articleReveal {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .article-card:hover {
-    background: var(--hub-surface-hover);
-    transform: translateY(-2px);
+    background: var(--hub-cream);
+    border-color: var(--hub-gold);
+    transform: translateX(4px);
   }
 
-  .article-card__icon {
-    flex-shrink: 0;
-    width: 44px;
-    height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--hub-gray-light);
-    border-radius: 0.5rem;
-    color: var(--hub-black);
+  .article-card:focus-visible {
+    outline: 2px solid var(--hub-gold);
+    outline-offset: 2px;
   }
 
-  .article-card__content {
+  .article-card__body {
     flex: 1;
     min-width: 0;
   }
 
   .article-card__title {
-    font-family: var(--font-family);
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--hub-text);
-    margin: 0 0 0.2rem 0;
-    line-height: 1.3;
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--hub-black);
+    margin: 0 0 2px;
+    line-height: 1.4;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -710,257 +798,185 @@
   }
 
   .article-card__source {
-    font-family: var(--font-family);
-    font-size: 0.7rem;
-    color: var(--hub-text-muted);
+    font-size: 0.75rem;
+    color: var(--hub-stone-light);
     font-weight: 400;
   }
 
   .article-card__arrow {
     flex-shrink: 0;
-    color: var(--hub-text-muted);
-    transition: transform 0.15s ease-out, color 0.15s ease-out;
+    color: var(--hub-stone-light);
+    transition:
+      color var(--duration-fast) ease,
+      transform var(--duration-fast) ease;
   }
 
   .article-card:hover .article-card__arrow {
+    color: var(--hub-gold);
     transform: translate(2px, -2px);
-    color: var(--hub-black);
   }
 
   .empty-state {
-    font-family: var(--font-family);
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    color: var(--hub-stone-light);
     text-align: center;
-    color: var(--hub-text-muted);
-    padding: 2rem;
+    padding: var(--space-xl);
     font-style: italic;
-    font-weight: 400;
   }
 
   /* ============================================
-     TEST RESULTS TAB
+     TEST RESULTS
      ============================================ */
 
   .test-results {
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
+    gap: var(--space-md);
   }
 
-  .test-cards-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
-  }
-
-  @media (max-width: 400px) {
-    .test-cards-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  /* Premium Test Card */
-  .test-card {
-    background: var(--hub-white);
-    border: 1px solid var(--hub-border);
-    border-radius: 0.875rem;
-    padding: 0.875rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  .test-item {
     opacity: 0;
-    animation: popInCard 0.25s ease-out forwards;
-    transition: box-shadow 0.25s ease-out;
+    animation: testReveal var(--duration-normal) var(--ease-out-expo) forwards;
+    animation-delay: var(--delay, 0s);
   }
 
-  /* Stagger animation for test cards */
-  .test-card:nth-child(1) { animation-delay: 0.1s; }
-  .test-card:nth-child(2) { animation-delay: 0.2s; }
-  .test-card:nth-child(3) { animation-delay: 0.3s; }
-  .test-card:nth-child(4) { animation-delay: 0.4s; }
-  .test-card:nth-child(5) { animation-delay: 0.5s; }
-  .test-card:nth-child(6) { animation-delay: 0.6s; }
-
-  @keyframes popInCard {
-    0% { opacity: 0; transform: scale(0.95); }
-    100% { opacity: 1; transform: scale(1); }
-  }
-
-  /* Subtle hover - informational cards, not interactive */
-  @media (hover: hover) {
-    .test-card:hover {
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  @keyframes testReveal {
+    from {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
     }
   }
 
-  .test-card__header {
+  .test-item__header {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
-    gap: 0.25rem;
-    margin-bottom: 0.5rem;
-    text-align: center;
+    margin-bottom: var(--space-xs);
   }
 
-  .test-card__indicator {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--hub-black);
-  }
-
-  .test-card__name {
-    font-family: var(--font-family);
-    font-size: 0.7rem;
-    font-weight: 600;
+  .test-item__name {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--hub-black);
     text-transform: uppercase;
     letter-spacing: 0.03em;
-    color: var(--hub-text);
-    margin: 0;
-    text-align: center;
   }
 
-  .test-card__status {
-    display: flex;
+  .test-item__badge {
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    gap: 0.4rem;
-    margin-bottom: 0.625rem;
+    gap: 4px;
+    padding: 2px 8px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: 4px;
+    background: var(--hub-border);
+    color: var(--hub-stone);
   }
 
-  .test-card__check {
+  .test-item__badge--pass {
+    background: var(--hub-success-light);
     color: var(--hub-success);
-    animation: checkPop 0.4s ease-out forwards;
   }
 
-  @keyframes checkPop {
-    0% { transform: scale(0); opacity: 0; }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); opacity: 1; }
-  }
-
-  .test-card__result {
-    font-family: var(--font-family);
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: var(--hub-text);
-  }
-
-  .test-card__result--pass {
-    color: var(--hub-text);
-  }
-
-  /* Result group (GEÇTİ + range together) */
-  .test-card__result-group {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.15rem;
-  }
-
-  /* Accepted Range - shown inline with result */
-  .test-card__range {
-    font-family: var(--font-family);
-    font-size: 0.65rem;
-    color: var(--hub-text-muted);
-    font-weight: 500;
-  }
-
-  /* Animated Progress Bar */
-  .test-card__progress {
+  .test-item__bar {
     height: 4px;
-    background: rgba(0, 0, 0, 0.08);
+    background: var(--hub-border);
     border-radius: 2px;
     overflow: hidden;
-    margin-bottom: 0.4rem;
+    margin-bottom: var(--space-xs);
   }
 
-  .test-card__progress-bar {
+  .test-item__progress {
     height: 100%;
     width: var(--progress, 100%);
-    background: linear-gradient(90deg, var(--hub-black) 0%, var(--hub-black) 100%);
+    background: linear-gradient(90deg, var(--hub-gold) 0%, #E9A80C 100%);
     border-radius: 2px;
     transform: scaleX(0);
     transform-origin: left;
-    animation: fillProgress 0.5s ease-out forwards;
-    animation-delay: 0.3s;
+    animation: progressFill var(--duration-slow) var(--ease-out-expo) forwards;
+    animation-delay: calc(var(--delay, 0s) + 0.2s);
   }
 
-  @keyframes fillProgress {
-    to { transform: scaleX(1); }
+  @keyframes progressFill {
+    to {
+      transform: scaleX(1);
+    }
   }
 
-  .test-card__percent {
-    font-family: var(--font-family);
-    text-align: center;
-    font-size: 0.7rem;
+  .test-item__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .test-item__percent {
+    font-size: 0.75rem;
     font-weight: 600;
-    color: var(--hub-text-muted);
+    color: var(--hub-gold);
     font-variant-numeric: tabular-nums;
   }
 
-  /* Certification Footer */
-  .test-results__footer {
-    display: flex;
-    justify-content: center;
-    gap: 1.25rem;
-    flex-wrap: wrap;
-    padding-top: 0.5rem;
-    border-top: 1px solid var(--hub-border);
+  .test-item__range {
+    font-size: 0.6875rem;
+    color: var(--hub-stone-light);
   }
 
-  .certification-badge,
-  .test-date {
+  .test-footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--hub-border);
+    margin-top: var(--space-xs);
+  }
+
+  .test-footer__item {
     display: flex;
     align-items: center;
-    gap: 0.4rem;
-    font-family: var(--font-family);
+    gap: 6px;
     font-size: 0.75rem;
-    color: var(--hub-text-muted);
-    font-weight: 400;
+    color: var(--hub-stone);
   }
 
-  .certification-badge svg {
-    color: var(--hub-black);
-  }
-
-  .certification-badge span {
-    font-weight: 600;
-    color: var(--hub-black);
-  }
-
-  /* Contact Note */
-  .test-results__note {
-    font-family: var(--font-family);
-    font-size: 0.7rem;
-    color: var(--hub-text-muted);
-    text-align: center;
-    padding: 0.625rem;
-    background: var(--hub-surface);
-    border-radius: 0.5rem;
-    font-weight: 400;
-  }
-
-  .test-results__note span {
-    color: var(--hub-black);
-  }
-
-  .test-results__note strong {
-    color: var(--hub-text);
-    font-weight: 600;
-  }
-
-  .test-results__email {
-    white-space: nowrap;
+  .test-footer__item svg {
+    color: var(--hub-gold);
   }
 
   /* ============================================
-     CAROUSEL DOTS (Apple-style)
+     CARD FOOTER
+     ============================================ */
+
+  .ingredient-card__footer {
+    padding: var(--space-sm) var(--space-lg);
+    background: rgba(28, 25, 23, 0.02);
+    border-top: 1px solid var(--hub-border-subtle);
+    text-align: center;
+  }
+
+  .ingredient-card__note {
+    font-size: 0.6875rem;
+    color: var(--hub-stone-light);
+    letter-spacing: 0.02em;
+  }
+
+  /* ============================================
+     CAROUSEL DOTS
      ============================================ */
 
   .carousel-dots {
     display: none;
     justify-content: center;
     align-items: center;
-    gap: 8px;
-    padding: 16px 0;
+    gap: 10px;
+    padding: var(--space-lg) 0;
   }
 
   @media (max-width: 767px) {
@@ -974,50 +990,50 @@
     height: 8px;
     border-radius: 4px;
     border: none;
-    background: rgba(0, 0, 0, 0.2);
+    background: var(--hub-border);
     cursor: pointer;
-    transition: background-color 0.3s ease, width 0.3s ease;
+    transition:
+      background-color var(--duration-normal) ease,
+      width var(--duration-normal) var(--ease-out-expo);
     padding: 0;
     position: relative;
-    touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
   }
 
-  /* Expand touch target to 44x44px using pseudo-element */
   .carousel-dot::before {
     content: '';
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 44px;
-    height: 44px;
+    inset: -18px;
   }
 
   .carousel-dot:hover {
-    background: rgba(0, 0, 0, 0.35);
+    background: var(--hub-stone-light);
   }
 
   .carousel-dot:focus-visible {
-    outline: 2px solid var(--hub-black);
+    outline: 2px solid var(--hub-gold);
     outline-offset: 4px;
   }
 
   .carousel-dot.is-active {
-    width: 24px;
-    background: var(--hub-black);
+    width: 28px;
+    background: var(--hub-gold);
   }
 
-  /* Empty State */
+  /* ============================================
+     EMPTY STATE
+     ============================================ */
+
   .ingredient-hub__empty {
-    font-family: var(--font-family);
     text-align: center;
-    padding: 4rem 2rem;
-    color: var(--hub-text-muted);
-    font-weight: 400;
+    padding: var(--space-2xl);
+    color: var(--hub-stone-light);
   }
 
-  /* Visually Hidden (Screen Reader Only) */
+  /* ============================================
+     UTILITY
+     ============================================ */
+
   .visually-hidden {
     position: absolute;
     width: 1px;
@@ -1031,27 +1047,32 @@
   }
 
   /* ============================================
-     REDUCED MOTION SUPPORT
+     REDUCED MOTION
      ============================================ */
+
   @media (prefers-reduced-motion: reduce) {
+    .ingredient-card,
+    .ingredient-card__image,
+    .ingredient-card__image-glow,
     .tab-panel,
     .benefit-item,
     .article-card,
-    .test-card,
-    .test-card__check,
-    .test-card__progress-bar {
+    .test-item,
+    .test-item__progress,
+    .carousel-dot,
+    .ingredient-card__tab-indicator {
       animation: none !important;
-      transition-duration: 0.01ms !important;
+      transition: none !important;
     }
 
     .benefit-item,
     .article-card,
-    .test-card {
+    .test-item {
       opacity: 1 !important;
       transform: none !important;
     }
 
-    .test-card__progress-bar {
+    .test-item__progress {
       transform: scaleX(1) !important;
     }
   }
@@ -1062,51 +1083,51 @@
   const section = document.getElementById('ingredient-hub-{{ section.id }}');
   if (!section) return;
 
-  // Tab Switching Logic
+  // Tab Switching with Indicator Animation
   const tabs = section.querySelectorAll('.ingredient-card__tab');
 
   function activateTab(tab) {
     const cardId = tab.dataset.card;
     const tabName = tab.dataset.tab;
+    const tablist = tab.closest('.ingredient-card__tabs');
+    const indicator = tablist.querySelector('.ingredient-card__tab-indicator');
 
-    // Update tabs for this card (and its clones)
-    section.querySelectorAll(`.ingredient-card__tab[data-card="${cardId}"]`).forEach(t => {
-      t.classList.remove('is-active');
-      t.setAttribute('aria-selected', 'false');
-      t.setAttribute('tabindex', '-1');
-    });
-    // Activate all matching tabs (original + clones)
-    section.querySelectorAll(`.ingredient-card__tab[data-tab="${tabName}"][data-card="${cardId}"]`).forEach(t => {
-      t.classList.add('is-active');
-      t.setAttribute('aria-selected', 'true');
-      t.setAttribute('tabindex', '0');
+    // Update tab states
+    section.querySelectorAll(`.ingredient-card__tab[data-card="${cardId}"]`).forEach((t, i) => {
+      const isActive = t.dataset.tab === tabName;
+      t.classList.toggle('is-active', isActive);
+      t.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      t.setAttribute('tabindex', isActive ? '0' : '-1');
     });
 
-    // Update panels for this card (and clones)
+    // Animate indicator
+    const tabIndex = Array.from(tablist.querySelectorAll('.ingredient-card__tab')).indexOf(tab);
+    if (indicator) {
+      indicator.style.transform = `translateX(${tabIndex * 100}%)`;
+    }
+
+    // Update panels
     section.querySelectorAll(`.tab-panel[data-card="${cardId}"]`).forEach(p => {
-      p.classList.remove('is-active');
-    });
-    section.querySelectorAll(`.tab-panel[data-panel="${tabName}"][data-card="${cardId}"]`).forEach(p => {
-      p.classList.add('is-active');
+      const isActive = p.dataset.panel === tabName;
+      p.classList.toggle('is-active', isActive);
 
-      // Re-trigger animations
-      const animatedItems = p.querySelectorAll('[style*="animation-delay"]');
-      animatedItems.forEach(item => {
-        item.style.animation = 'none';
-        item.offsetHeight;
-        item.style.animation = '';
-      });
+      if (isActive) {
+        // Re-trigger staggered animations
+        const items = p.querySelectorAll('[style*="--delay"]');
+        items.forEach(item => {
+          item.style.animation = 'none';
+          item.offsetHeight;
+          item.style.animation = '';
+        });
+      }
     });
   }
 
   tabs.forEach(tab => {
-    tab.addEventListener('click', function() {
-      activateTab(this);
-    });
+    tab.addEventListener('click', () => activateTab(tab));
 
-    // Keyboard navigation for tabs (WCAG tab pattern)
+    // Keyboard navigation
     tab.addEventListener('keydown', function(e) {
-      const cardId = this.dataset.card;
       const tablist = this.closest('.ingredient-card__tabs');
       const cardTabs = Array.from(tablist.querySelectorAll('.ingredient-card__tab'));
       const currentIndex = cardTabs.indexOf(this);
@@ -1141,10 +1162,9 @@
     });
   });
 
-  // Set initial tabindex state for tabs
+  // Initialize tab states
   section.querySelectorAll('.ingredient-card__tabs').forEach(tablist => {
-    const cardTabs = tablist.querySelectorAll('.ingredient-card__tab');
-    cardTabs.forEach(tab => {
+    tablist.querySelectorAll('.ingredient-card__tab').forEach(tab => {
       tab.setAttribute('tabindex', tab.classList.contains('is-active') ? '0' : '-1');
     });
   });
@@ -1157,15 +1177,12 @@
   const mobileQuery = window.matchMedia('(max-width: 767px)');
 
   if (carousel && cardCount > 1 && mobileQuery.matches) {
-    const gap = 12;
-    let cardWidth = 260 + gap; // card width + gap
+    const gap = 16;
+    let cardWidth = 300 + gap;
 
-    // Clone cards for infinite effect
     function setupInfiniteCarousel() {
-      // Remove existing clones
       carousel.querySelectorAll('.is-clone').forEach(c => c.remove());
 
-      // Clone all cards and append/prepend for infinite effect
       originalCards.forEach((card, i) => {
         const cloneBefore = card.cloneNode(true);
         const cloneAfter = card.cloneNode(true);
@@ -1177,13 +1194,11 @@
         carousel.appendChild(cloneAfter);
       });
 
-      // Set initial scroll position to first real card
       setTimeout(() => {
         carousel.scrollLeft = cardCount * cardWidth;
       }, 10);
     }
 
-    // Handle infinite scroll looping
     let isJumping = false;
     let scrollTimeout;
 
@@ -1195,26 +1210,20 @@
         const scrollLeft = carousel.scrollLeft;
         const totalOriginalWidth = cardCount * cardWidth;
 
-        // Calculate real index (0 to cardCount-1)
         let realIndex = Math.round((scrollLeft - totalOriginalWidth) / cardWidth);
         realIndex = ((realIndex % cardCount) + cardCount) % cardCount;
 
-        // Update dots
         dots.forEach((dot, i) => {
-          const isActive = i === realIndex;
-          dot.classList.toggle('is-active', isActive);
+          dot.classList.toggle('is-active', i === realIndex);
         });
 
-        // Jump to real cards if we're in clone territory
         if (scrollLeft <= cardWidth * 0.5) {
-          // Scrolled too far left - jump to end
           isJumping = true;
           carousel.style.scrollBehavior = 'auto';
           carousel.scrollLeft = scrollLeft + totalOriginalWidth;
           carousel.style.scrollBehavior = '';
           setTimeout(() => { isJumping = false; }, 50);
         } else if (scrollLeft >= (cardCount * 2 - 0.5) * cardWidth + totalOriginalWidth) {
-          // Scrolled too far right - jump to start
           isJumping = true;
           carousel.style.scrollBehavior = 'auto';
           carousel.scrollLeft = scrollLeft - totalOriginalWidth;
@@ -1226,21 +1235,17 @@
 
     carousel.addEventListener('scroll', handleScroll, { passive: true });
 
-    // Click dot to scroll to card
     dots.forEach((dot, index) => {
       dot.addEventListener('click', function() {
-        const targetScroll = (cardCount + index) * cardWidth;
         carousel.scrollTo({
-          left: targetScroll,
+          left: (cardCount + index) * cardWidth,
           behavior: 'smooth'
         });
       });
     });
 
-    // Initialize
     setupInfiniteCarousel();
 
-    // Reinitialize on resize
     let resizeTimeout;
     window.addEventListener('resize', () => {
       clearTimeout(resizeTimeout);
@@ -1251,7 +1256,6 @@
       }, 250);
     });
   } else if (carousel && dots.length > 0) {
-    // Desktop or single card - simple dot navigation
     let scrollTimeout;
     carousel.addEventListener('scroll', function() {
       clearTimeout(scrollTimeout);
@@ -1281,13 +1285,12 @@
     });
   }
 
-  // Animate progress bars when Test Results tab is shown
+  // Progress bar animation on visibility
   const testPanels = section.querySelectorAll('.tab-panel[data-panel="tests"]');
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        const progressBars = entry.target.querySelectorAll('.test-card__progress-bar');
-        progressBars.forEach(bar => {
+        entry.target.querySelectorAll('.test-item__progress').forEach(bar => {
           bar.style.animation = 'none';
           bar.offsetHeight;
           bar.style.animation = '';
@@ -1322,7 +1325,7 @@
       "type": "color",
       "id": "background_color",
       "label": "Arka Plan Rengi",
-      "default": "#ffffff"
+      "default": "#FAFAF9"
     },
     {
       "type": "range",
@@ -1332,7 +1335,7 @@
       "max": 100,
       "step": 4,
       "unit": "px",
-      "default": 60
+      "default": 80
     },
     {
       "type": "range",
@@ -1342,7 +1345,7 @@
       "max": 100,
       "step": 4,
       "unit": "px",
-      "default": 60
+      "default": 80
     }
   ],
   "blocks": [
