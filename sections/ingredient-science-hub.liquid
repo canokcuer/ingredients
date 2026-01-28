@@ -279,7 +279,7 @@
 
                       {%- comment -%} Contact Note {%- endcomment -%}
                       <div class="test-results__note">
-                        <span>*</span> Detaylı analiz raporları için <strong>info@cyrasoul.com</strong> adresine mail atabilirsiniz.
+                        <span>*</span> Detaylı analiz raporları için <strong class="test-results__email">info@cyrasoul.com</strong> adresine mail atabilirsiniz.
                       </div>
                     </div>
                   </div>
@@ -291,12 +291,14 @@
 
       {%- comment -%} Carousel Dot Indicators (Mobile Only) {%- endcomment -%}
       {% if section.blocks.size > 1 %}
-        <div class="carousel-dots">
+        <div class="carousel-dots" role="tablist" aria-label="İçerik seçici">
           {% for block in section.blocks %}
             <button
               class="carousel-dot {% if forloop.first %}is-active{% endif %}"
+              role="tab"
               data-index="{{ forloop.index0 }}"
-              aria-label="İçerik {{ forloop.index }}"
+              aria-label="İçerik {{ forloop.index }} / {{ section.blocks.size }}"
+              aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
             ></button>
           {% endfor %}
         </div>
@@ -935,6 +937,10 @@
     font-weight: 600;
   }
 
+  .test-results__email {
+    white-space: nowrap;
+  }
+
   /* ============================================
      CAROUSEL DOT INDICATORS
      ============================================ */
@@ -1173,7 +1179,9 @@
 
         // Update dots
         dots.forEach((dot, i) => {
-          dot.classList.toggle('is-active', i === realIndex);
+          const isActive = i === realIndex;
+          dot.classList.toggle('is-active', isActive);
+          dot.setAttribute('aria-selected', isActive ? 'true' : 'false');
         });
 
         // Jump to real cards if we're in clone territory
@@ -1234,7 +1242,9 @@
         const index = Math.round(scrollLeft / cardWidth);
 
         dots.forEach((dot, i) => {
-          dot.classList.toggle('is-active', i === index);
+          const isActive = i === index;
+          dot.classList.toggle('is-active', isActive);
+          dot.setAttribute('aria-selected', isActive ? 'true' : 'false');
         });
       }, 50);
     }, { passive: true });
