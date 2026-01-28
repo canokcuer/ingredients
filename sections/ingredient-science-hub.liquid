@@ -293,16 +293,24 @@
         {% endfor %}
       </div>
 
-      {%- comment -%} Carousel Dot Indicators (Mobile Only) {%- endcomment -%}
+      {%- comment -%} Carousel Navigation (Mobile Only) {%- endcomment -%}
       {% if section.blocks.size > 1 %}
-        <div class="carousel-dots" aria-label="Carousel navigation">
-          {% for block in section.blocks %}
-            <button
-              class="carousel-dot {% if forloop.first %}is-active{% endif %}"
-              data-index="{{ forloop.index0 }}"
-              aria-label="İçerik {{ forloop.index }} / {{ section.blocks.size }}"
-            ></button>
-          {% endfor %}
+        <div class="carousel-nav">
+          <span class="carousel-counter">
+            <span class="carousel-counter__current">1</span>
+            <span class="carousel-counter__sep">/</span>
+            <span class="carousel-counter__total">{{ section.blocks.size }}</span>
+          </span>
+          <div class="carousel-dots" aria-label="Carousel navigation">
+            {% for block in section.blocks %}
+              <button
+                class="carousel-dot {% if forloop.first %}is-active{% endif %}"
+                data-index="{{ forloop.index0 }}"
+                aria-label="İçerik {{ forloop.index }} / {{ section.blocks.size }}"
+              ></button>
+            {% endfor %}
+          </div>
+          <span class="carousel-hint">Kaydır →</span>
         </div>
       {% endif %}
     {% else %}
@@ -337,6 +345,8 @@
     --hub-surface: #F8F8F8;
     --hub-surface-hover: #F0F0F0;
     --hub-surface-subtle: #FAFAFA;
+    --hub-success: #16A34A;
+    --hub-success-light: rgba(22, 163, 74, 0.1);
 
     /* Standardized Typography */
     --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -364,11 +374,20 @@
 
   .ingredient-hub__subtitle {
     font-family: var(--font-family);
-    text-align: center;
-    color: var(--hub-text-muted);
-    font-size: 1.1rem;
-    font-weight: 400;
-    margin-bottom: 2.5rem;
+    display: inline-block;
+    margin: 0 auto 2.5rem;
+    padding: 0.5rem 1rem;
+    background: var(--hub-success-light);
+    color: var(--hub-success);
+    font-size: 0.875rem;
+    font-weight: 600;
+    border-radius: 2rem;
+    border: 1px solid var(--hub-success);
+  }
+
+  .ingredient-hub__title + .ingredient-hub__subtitle {
+    display: block;
+    width: fit-content;
   }
 
   /* ============================================
@@ -396,10 +415,10 @@
       display: flex;
       overflow-x: auto;
       scroll-snap-type: x mandatory;
-      gap: 16px;
-      /* Center cards: 50vw - half of card width (150px) */
-      padding-left: calc(50vw - 150px);
-      padding-right: calc(50vw - 150px);
+      gap: 12px;
+      /* More peek: show ~40px of adjacent cards */
+      padding-left: calc(50vw - 130px);
+      padding-right: calc(50vw - 130px);
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
       -ms-overflow-style: none;
@@ -411,7 +430,7 @@
     }
 
     .ingredient-card {
-      flex: 0 0 300px; /* Wider cards for better readability */
+      flex: 0 0 260px; /* Narrower for more peek visibility */
       scroll-snap-align: center;
       scroll-snap-stop: always;
     }
@@ -566,7 +585,7 @@
      ============================================ */
 
   .ingredient-card__content {
-    padding: 1.25rem;
+    padding: 1rem;
   }
 
   .tab-panel {
@@ -597,10 +616,11 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    padding: 0.75rem 1rem;
-    background: var(--hub-gray-light);
-    border-radius: 0.625rem;
-    border-left: 3px solid var(--hub-black);
+    padding: 0.625rem 0.875rem;
+    background: var(--hub-white);
+    border-radius: 0.5rem;
+    border: 1px solid var(--hub-border);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
     opacity: 0;
     animation: slideInBenefit 0.25s ease-out forwards;
   }
@@ -612,7 +632,19 @@
 
   .benefit-item__icon {
     flex-shrink: 0;
-    color: var(--hub-black);
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--hub-success-light);
+    border-radius: 50%;
+    color: var(--hub-success);
+  }
+
+  .benefit-item__icon svg {
+    width: 14px;
+    height: 14px;
   }
 
   .benefit-item__text {
@@ -810,7 +842,7 @@
   }
 
   .test-card__check {
-    color: var(--hub-gold);
+    color: var(--hub-success);
     animation: checkPop 0.4s ease-out forwards;
   }
 
@@ -936,20 +968,52 @@
   }
 
   /* ============================================
-     CAROUSEL DOT INDICATORS
+     CAROUSEL NAVIGATION
      ============================================ */
 
-  .carousel-dots {
+  .carousel-nav {
     display: none;
+    align-items: center;
     justify-content: center;
     gap: 1rem;
-    padding: 1.25rem 0;
+    padding: 1rem 1rem 0.5rem;
   }
 
   @media (max-width: 767px) {
-    .carousel-dots {
+    .carousel-nav {
       display: flex;
     }
+  }
+
+  .carousel-counter {
+    font-family: var(--font-family);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--hub-text);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .carousel-counter__sep {
+    color: var(--hub-text-muted);
+    margin: 0 0.125rem;
+  }
+
+  .carousel-hint {
+    font-family: var(--font-family);
+    font-size: 0.75rem;
+    color: var(--hub-text-muted);
+    animation: hintPulse 2s ease-in-out 3;
+  }
+
+  @keyframes hintPulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+
+  .carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
   }
 
   .carousel-dot {
@@ -1137,13 +1201,14 @@
   // Mobile Infinite Carousel
   const carousel = section.querySelector('.ingredient-hub__carousel');
   const dots = section.querySelectorAll('.carousel-dot');
+  const counterCurrent = section.querySelector('.carousel-counter__current');
   const originalCards = Array.from(section.querySelectorAll('.ingredient-card:not(.is-clone)'));
   const cardCount = originalCards.length;
   const mobileQuery = window.matchMedia('(max-width: 767px)');
 
   if (carousel && cardCount > 1 && mobileQuery.matches) {
-    const gap = 16;
-    let cardWidth = 300 + gap; // card width + gap
+    const gap = 12;
+    let cardWidth = 260 + gap; // card width + gap
 
     // Clone cards for infinite effect
     function setupInfiniteCarousel() {
@@ -1184,12 +1249,15 @@
         let realIndex = Math.round((scrollLeft - totalOriginalWidth) / cardWidth);
         realIndex = ((realIndex % cardCount) + cardCount) % cardCount;
 
-        // Update dots
+        // Update dots and counter
         dots.forEach((dot, i) => {
           const isActive = i === realIndex;
           dot.classList.toggle('is-active', isActive);
           dot.setAttribute('aria-selected', isActive ? 'true' : 'false');
         });
+        if (counterCurrent) {
+          counterCurrent.textContent = realIndex + 1;
+        }
 
         // Jump to real cards if we're in clone territory
         if (scrollLeft <= cardWidth * 0.5) {
