@@ -121,6 +121,7 @@
                     aria-labelledby="tab-benefits-{{ block.id }}"
                     data-panel="benefits"
                     data-card="{{ block.id }}"
+                    tabindex="0"
                   >
                     <div class="benefits-list">
                       {% assign benefits = block.settings.benefits | newline_to_br | split: '<br />' %}
@@ -149,6 +150,7 @@
                     aria-labelledby="tab-articles-{{ block.id }}"
                     data-panel="articles"
                     data-card="{{ block.id }}"
+                    tabindex="0"
                   >
                     <div class="articles-list">
                       {% assign articles = block.settings.articles | newline_to_br | split: '<br />' %}
@@ -185,6 +187,7 @@
                                 <line x1="10" y1="14" x2="21" y2="3"/>
                               </svg>
                             </div>
+                            <span class="visually-hidden">(yeni sekmede açılır)</span>
                           </a>
                         {% endif %}
                       {% endfor %}
@@ -202,6 +205,7 @@
                     aria-labelledby="tab-tests-{{ block.id }}"
                     data-panel="tests"
                     data-card="{{ block.id }}"
+                    tabindex="0"
                   >
                     <div class="test-results">
                       <div class="test-cards-grid">
@@ -291,14 +295,12 @@
 
       {%- comment -%} Carousel Dot Indicators (Mobile Only) {%- endcomment -%}
       {% if section.blocks.size > 1 %}
-        <div class="carousel-dots" role="tablist" aria-label="İçerik seçici">
+        <div class="carousel-dots" aria-label="Carousel navigation">
           {% for block in section.blocks %}
             <button
               class="carousel-dot {% if forloop.first %}is-active{% endif %}"
-              role="tab"
               data-index="{{ forloop.index0 }}"
               aria-label="İçerik {{ forloop.index }} / {{ section.blocks.size }}"
-              aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
             ></button>
           {% endfor %}
         </div>
@@ -332,6 +334,9 @@
     --hub-bg: {{ section.settings.background_color }};
     --hub-card-bg: #FFFFFF;
     --hub-border: rgba(0, 0, 0, 0.1);
+    --hub-surface: #F8F8F8;
+    --hub-surface-hover: #F0F0F0;
+    --hub-surface-subtle: #FAFAFA;
 
     /* Standardized Typography */
     --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -352,6 +357,7 @@
     font-size: clamp(1.75rem, 4vw, 2.5rem);
     font-weight: 700;
     text-align: center;
+    text-wrap: balance;
     margin-bottom: 0.5rem;
     color: var(--hub-text);
   }
@@ -421,21 +427,12 @@
      ============================================ */
 
   .ingredient-card {
-    background: rgba(255, 255, 255, 0.92);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: var(--hub-card-bg);
     border-radius: 1.25rem;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.4);
+    border: 1px solid var(--hub-border);
     overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  @supports not (backdrop-filter: blur(12px)) {
-    .ingredient-card {
-      background: var(--hub-card-bg);
-      border: 1px solid var(--hub-border);
-    }
+    transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
   }
 
   @media (min-width: 768px) {
@@ -455,7 +452,7 @@
     align-items: center;
     padding: 1.5rem 1.5rem 1rem;
     text-align: center;
-    background: linear-gradient(180deg, #FAFAFA 0%, #FFFFFF 100%);
+    background: linear-gradient(180deg, var(--hub-surface-subtle) 0%, var(--hub-white) 100%);
     border-bottom: 1px solid var(--hub-border);
   }
 
@@ -474,7 +471,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.3s ease;
+    transition: transform 0.25s ease-out;
   }
 
   .ingredient-card:hover .ingredient-card__image {
@@ -496,7 +493,7 @@
   .ingredient-card__tagline {
     font-family: var(--font-family);
     font-size: 0.9rem;
-    color: var(--hub-gold);
+    color: var(--hub-text);
     margin: 0;
     font-weight: 600;
   }
@@ -520,13 +517,13 @@
     justify-content: center;
     gap: 0.4rem;
     padding: 0.875rem 0.5rem;
-    font-size: 0.75rem;
+    font-size: 0.8125rem;
     font-weight: 500;
     color: var(--hub-text-muted);
     background: transparent;
     border: none;
     cursor: pointer;
-    transition: color 0.2s ease, background-color 0.2s ease;
+    transition: color 0.15s ease-out, background-color 0.15s ease-out;
     position: relative;
     -webkit-tap-highlight-color: transparent;
   }
@@ -574,7 +571,7 @@
 
   .tab-panel {
     display: none;
-    animation: fadeIn 0.3s ease;
+    animation: fadeIn 0.25s ease-out;
   }
 
   .tab-panel.is-active {
@@ -605,7 +602,7 @@
     border-radius: 0.625rem;
     border-left: 3px solid var(--hub-black);
     opacity: 0;
-    animation: slideInBenefit 0.3s ease forwards;
+    animation: slideInBenefit 0.25s ease-out forwards;
   }
 
   @keyframes slideInBenefit {
@@ -640,13 +637,13 @@
     align-items: center;
     gap: 0.875rem;
     padding: 0.875rem;
-    background: #F8F8F8;
+    background: var(--hub-surface);
     border-radius: 0.625rem;
     text-decoration: none;
     color: inherit;
-    transition: background-color 0.2s ease, transform 0.2s ease;
+    transition: background-color 0.15s ease-out, transform 0.15s ease-out;
     opacity: 0;
-    animation: slideUpArticle 0.3s ease forwards;
+    animation: slideUpArticle 0.25s ease-out forwards;
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
   }
@@ -662,8 +659,8 @@
   }
 
   .article-card:hover {
-    background: #F0F0F0;
-    transform: translateX(4px);
+    background: var(--hub-surface-hover);
+    transform: translateY(-2px);
   }
 
   .article-card__icon {
@@ -706,7 +703,7 @@
   .article-card__arrow {
     flex-shrink: 0;
     color: var(--hub-text-muted);
-    transition: transform 0.2s ease, color 0.2s ease;
+    transition: transform 0.15s ease-out, color 0.15s ease-out;
   }
 
   .article-card:hover .article-card__arrow {
@@ -753,8 +750,8 @@
     padding: 0.875rem;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     opacity: 0;
-    animation: popInCard 0.35s ease forwards;
-    transition: box-shadow 0.3s ease;
+    animation: popInCard 0.25s ease-out forwards;
+    transition: box-shadow 0.25s ease-out;
   }
 
   /* Stagger animation for test cards */
@@ -791,12 +788,6 @@
     height: 6px;
     border-radius: 50%;
     background: var(--hub-gold);
-    animation: pulse 2s ease-in-out infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
   }
 
   .test-card__name {
@@ -820,7 +811,7 @@
 
   .test-card__check {
     color: var(--hub-gold);
-    animation: checkPop 0.6s ease forwards;
+    animation: checkPop 0.4s ease-out forwards;
   }
 
   @keyframes checkPop {
@@ -837,7 +828,7 @@
   }
 
   .test-card__result--pass {
-    color: var(--hub-gold);
+    color: var(--hub-text);
   }
 
   /* Result group (GEÇTİ + range together) */
@@ -867,15 +858,17 @@
 
   .test-card__progress-bar {
     height: 100%;
-    width: 0;
+    width: var(--progress, 100%);
     background: linear-gradient(90deg, var(--hub-black) 0%, var(--hub-gold) 100%);
     border-radius: 2px;
-    animation: fillProgress 1s ease forwards;
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: fillProgress 0.5s ease-out forwards;
     animation-delay: 0.3s;
   }
 
   @keyframes fillProgress {
-    to { width: var(--progress, 100%); }
+    to { transform: scaleX(1); }
   }
 
   .test-card__percent {
@@ -884,6 +877,7 @@
     font-size: 0.7rem;
     font-weight: 600;
     color: var(--hub-text-muted);
+    font-variant-numeric: tabular-nums;
   }
 
   /* Certification Footer */
@@ -923,7 +917,7 @@
     color: var(--hub-text-muted);
     text-align: center;
     padding: 0.625rem;
-    background: #F8F8F8;
+    background: var(--hub-surface);
     border-radius: 0.5rem;
     font-weight: 400;
   }
@@ -965,7 +959,7 @@
     border: none;
     background: var(--hub-gray-medium);
     cursor: pointer;
-    transition: background-color 0.3s ease, width 0.3s ease, border-radius 0.3s ease;
+    transition: background-color 0.25s ease-out, transform 0.25s ease-out, border-radius 0.25s ease-out;
     padding: 0;
     position: relative;
     touch-action: manipulation;
@@ -995,7 +989,7 @@
 
   .carousel-dot.is-active {
     background: var(--hub-black);
-    width: 24px;
+    transform: scaleX(3);
     border-radius: 4px;
   }
 
@@ -1008,6 +1002,19 @@
     font-weight: 400;
   }
 
+  /* Visually Hidden (Screen Reader Only) */
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
   /* ============================================
      REDUCED MOTION SUPPORT
      ============================================ */
@@ -1016,7 +1023,6 @@
     .benefit-item,
     .article-card,
     .test-card,
-    .test-card__indicator,
     .test-card__check,
     .test-card__progress-bar {
       animation: none !important;
@@ -1031,7 +1037,7 @@
     }
 
     .test-card__progress-bar {
-      width: var(--progress, 100%) !important;
+      transform: scaleX(1) !important;
     }
   }
 </style>
@@ -1133,8 +1139,9 @@
   const dots = section.querySelectorAll('.carousel-dot');
   const originalCards = Array.from(section.querySelectorAll('.ingredient-card:not(.is-clone)'));
   const cardCount = originalCards.length;
+  const mobileQuery = window.matchMedia('(max-width: 767px)');
 
-  if (carousel && cardCount > 1 && window.innerWidth < 768) {
+  if (carousel && cardCount > 1 && mobileQuery.matches) {
     const gap = 16;
     let cardWidth = 300 + gap; // card width + gap
 
@@ -1224,7 +1231,7 @@
     window.addEventListener('resize', () => {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(() => {
-        if (window.innerWidth < 768) {
+        if (mobileQuery.matches) {
           setupInfiniteCarousel();
         }
       }, 250);
