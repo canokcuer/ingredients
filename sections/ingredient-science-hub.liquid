@@ -67,10 +67,12 @@
                     class="ingredient-card__tab is-active"
                     role="tab"
                     aria-selected="true"
+                    id="tab-benefits-{{ block.id }}"
+                    aria-controls="panel-benefits-{{ block.id }}"
                     data-tab="benefits"
                     data-card="{{ block.id }}"
                   >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                       <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
                     </svg>
                     <span>Faydalar</span>
@@ -79,10 +81,12 @@
                     class="ingredient-card__tab"
                     role="tab"
                     aria-selected="false"
+                    id="tab-articles-{{ block.id }}"
+                    aria-controls="panel-articles-{{ block.id }}"
                     data-tab="articles"
                     data-card="{{ block.id }}"
                   >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
                       <polyline points="14,2 14,8 20,8"/>
                       <line x1="16" y1="13" x2="8" y2="13"/>
@@ -94,10 +98,12 @@
                     class="ingredient-card__tab"
                     role="tab"
                     aria-selected="false"
+                    id="tab-tests-{{ block.id }}"
+                    aria-controls="panel-tests-{{ block.id }}"
                     data-tab="tests"
                     data-card="{{ block.id }}"
                   >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                       <path d="M9 12l2 2 4-4"/>
                       <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
                     </svg>
@@ -111,6 +117,8 @@
                   <div
                     class="tab-panel is-active"
                     role="tabpanel"
+                    id="panel-benefits-{{ block.id }}"
+                    aria-labelledby="tab-benefits-{{ block.id }}"
                     data-panel="benefits"
                     data-card="{{ block.id }}"
                   >
@@ -121,7 +129,7 @@
                         {% if benefit_text != blank %}
                           <div class="benefit-item" style="animation-delay: {{ forloop.index | times: 0.1 }}s">
                             <div class="benefit-item__icon">
-                              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
                                 <polyline points="22 4 12 14.01 9 11.01"/>
                               </svg>
@@ -137,6 +145,8 @@
                   <div
                     class="tab-panel"
                     role="tabpanel"
+                    id="panel-articles-{{ block.id }}"
+                    aria-labelledby="tab-articles-{{ block.id }}"
                     data-panel="articles"
                     data-card="{{ block.id }}"
                   >
@@ -157,7 +167,7 @@
                             style="animation-delay: {{ forloop.index | times: 0.15 }}s"
                           >
                             <div class="article-card__icon">
-                              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
                                 <polyline points="14,2 14,8 20,8"/>
                               </svg>
@@ -169,7 +179,7 @@
                               {% endif %}
                             </div>
                             <div class="article-card__arrow">
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                                 <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
                                 <polyline points="15 3 21 3 21 9"/>
                                 <line x1="10" y1="14" x2="21" y2="3"/>
@@ -188,6 +198,8 @@
                   <div
                     class="tab-panel"
                     role="tabpanel"
+                    id="panel-tests-{{ block.id }}"
+                    aria-labelledby="tab-tests-{{ block.id }}"
                     data-panel="tests"
                     data-card="{{ block.id }}"
                   >
@@ -212,7 +224,7 @@
 
                               <div class="test-card__status">
                                 {% if test_result == 'GEÇTİ' or test_result == 'PASS' %}
-                                  <svg class="test-card__check" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                  <svg class="test-card__check" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
                                     <polyline points="22 4 12 14.01 9 11.01"/>
                                   </svg>
@@ -244,7 +256,7 @@
                       <div class="test-results__footer">
                         {% if block.settings.certification != blank %}
                           <div class="certification-badge">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                               <circle cx="12" cy="8" r="7"/>
                               <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>
                             </svg>
@@ -254,7 +266,7 @@
 
                         {% if block.settings.test_date != blank %}
                           <div class="test-date">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                               <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
                               <line x1="16" y1="2" x2="16" y2="6"/>
                               <line x1="8" y1="2" x2="8" y2="6"/>
@@ -314,7 +326,7 @@
     --hub-gray-light: rgba(0, 0, 0, 0.04);
     --hub-gray-medium: rgba(0, 0, 0, 0.08);
     --hub-text: #000000;
-    --hub-text-muted: rgba(0, 0, 0, 0.5);
+    --hub-text-muted: rgba(0, 0, 0, 0.56); /* 4.5:1 contrast ratio */
     --hub-bg: {{ section.settings.background_color }};
     --hub-card-bg: #FFFFFF;
     --hub-border: rgba(0, 0, 0, 0.1);
@@ -383,6 +395,7 @@
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
       -ms-overflow-style: none;
+      touch-action: pan-x pinch-zoom;
     }
 
     .ingredient-hub__carousel::-webkit-scrollbar {
@@ -406,12 +419,21 @@
      ============================================ */
 
   .ingredient-card {
-    background: var(--hub-card-bg);
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-radius: 1.25rem;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    border: 1px solid var(--hub-border);
+    border: 1px solid rgba(255, 255, 255, 0.4);
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  @supports not (backdrop-filter: blur(12px)) {
+    .ingredient-card {
+      background: var(--hub-card-bg);
+      border: 1px solid var(--hub-border);
+    }
   }
 
   @media (min-width: 768px) {
@@ -485,6 +507,7 @@
     display: flex;
     border-bottom: 1px solid var(--hub-border);
     background: var(--hub-white);
+    touch-action: manipulation;
   }
 
   .ingredient-card__tab {
@@ -501,8 +524,9 @@
     background: transparent;
     border: none;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: color 0.2s ease, background-color 0.2s ease;
     position: relative;
+    -webkit-tap-highlight-color: transparent;
   }
 
   .ingredient-card__tab svg {
@@ -530,6 +554,12 @@
     height: 2px;
     background: var(--hub-gold);
     border-radius: 2px 2px 0 0;
+  }
+
+  .ingredient-card__tab:focus-visible {
+    outline: 2px solid var(--hub-gold);
+    outline-offset: -2px;
+    border-radius: 2px;
   }
 
   /* ============================================
@@ -573,7 +603,7 @@
     border-radius: 0.625rem;
     border-left: 3px solid var(--hub-black);
     opacity: 0;
-    animation: slideInBenefit 0.4s ease forwards;
+    animation: slideInBenefit 0.3s ease forwards;
   }
 
   @keyframes slideInBenefit {
@@ -612,9 +642,16 @@
     border-radius: 0.625rem;
     text-decoration: none;
     color: inherit;
-    transition: all 0.2s ease;
+    transition: background-color 0.2s ease, transform 0.2s ease;
     opacity: 0;
-    animation: slideUpArticle 0.4s ease forwards;
+    animation: slideUpArticle 0.3s ease forwards;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .article-card:focus-visible {
+    outline: 2px solid var(--hub-gold);
+    outline-offset: 2px;
   }
 
   @keyframes slideUpArticle {
@@ -651,6 +688,10 @@
     color: var(--hub-text);
     margin: 0 0 0.2rem 0;
     line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   .article-card__source {
@@ -663,7 +704,7 @@
   .article-card__arrow {
     flex-shrink: 0;
     color: var(--hub-text-muted);
-    transition: all 0.2s ease;
+    transition: transform 0.2s ease, color 0.2s ease;
   }
 
   .article-card:hover .article-card__arrow {
@@ -710,19 +751,28 @@
     padding: 0.875rem;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     opacity: 0;
-    animation: popInCard 0.5s ease forwards;
-    transition: all 0.3s ease;
+    animation: popInCard 0.35s ease forwards;
+    transition: box-shadow 0.3s ease;
   }
+
+  /* Stagger animation for test cards */
+  .test-card:nth-child(1) { animation-delay: 0.1s; }
+  .test-card:nth-child(2) { animation-delay: 0.2s; }
+  .test-card:nth-child(3) { animation-delay: 0.3s; }
+  .test-card:nth-child(4) { animation-delay: 0.4s; }
+  .test-card:nth-child(5) { animation-delay: 0.5s; }
+  .test-card:nth-child(6) { animation-delay: 0.6s; }
 
   @keyframes popInCard {
     0% { opacity: 0; transform: scale(0.95); }
     100% { opacity: 1; transform: scale(1); }
   }
 
-  .test-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-    border-color: var(--hub-black);
+  /* Subtle hover - informational cards, not interactive */
+  @media (hover: hover) {
+    .test-card:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    }
   }
 
   .test-card__header {
@@ -892,7 +942,7 @@
   .carousel-dots {
     display: none;
     justify-content: center;
-    gap: 0.5rem;
+    gap: 1rem;
     padding: 1.25rem 0;
   }
 
@@ -909,12 +959,32 @@
     border: none;
     background: var(--hub-gray-medium);
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: background-color 0.3s ease, width 0.3s ease, border-radius 0.3s ease;
     padding: 0;
+    position: relative;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Expand touch target to 44x44px using pseudo-element */
+  .carousel-dot::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
   }
 
   .carousel-dot:hover {
     background: rgba(0, 0, 0, 0.2);
+  }
+
+  .carousel-dot:focus-visible {
+    outline: 2px solid var(--hub-gold);
+    outline-offset: 4px;
   }
 
   .carousel-dot.is-active {
@@ -931,6 +1001,33 @@
     color: var(--hub-text-muted);
     font-weight: 400;
   }
+
+  /* ============================================
+     REDUCED MOTION SUPPORT
+     ============================================ */
+  @media (prefers-reduced-motion: reduce) {
+    .tab-panel,
+    .benefit-item,
+    .article-card,
+    .test-card,
+    .test-card__indicator,
+    .test-card__check,
+    .test-card__progress-bar {
+      animation: none !important;
+      transition-duration: 0.01ms !important;
+    }
+
+    .benefit-item,
+    .article-card,
+    .test-card {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    .test-card__progress-bar {
+      width: var(--progress, 100%) !important;
+    }
+  }
 </style>
 
 <script>
@@ -941,37 +1038,87 @@
   // Tab Switching Logic
   const tabs = section.querySelectorAll('.ingredient-card__tab');
 
+  function activateTab(tab) {
+    const cardId = tab.dataset.card;
+    const tabName = tab.dataset.tab;
+
+    // Update tabs for this card (and its clones)
+    section.querySelectorAll(`.ingredient-card__tab[data-card="${cardId}"]`).forEach(t => {
+      t.classList.remove('is-active');
+      t.setAttribute('aria-selected', 'false');
+      t.setAttribute('tabindex', '-1');
+    });
+    // Activate all matching tabs (original + clones)
+    section.querySelectorAll(`.ingredient-card__tab[data-tab="${tabName}"][data-card="${cardId}"]`).forEach(t => {
+      t.classList.add('is-active');
+      t.setAttribute('aria-selected', 'true');
+      t.setAttribute('tabindex', '0');
+    });
+
+    // Update panels for this card (and clones)
+    section.querySelectorAll(`.tab-panel[data-card="${cardId}"]`).forEach(p => {
+      p.classList.remove('is-active');
+    });
+    section.querySelectorAll(`.tab-panel[data-panel="${tabName}"][data-card="${cardId}"]`).forEach(p => {
+      p.classList.add('is-active');
+
+      // Re-trigger animations
+      const animatedItems = p.querySelectorAll('[style*="animation-delay"]');
+      animatedItems.forEach(item => {
+        item.style.animation = 'none';
+        item.offsetHeight;
+        item.style.animation = '';
+      });
+    });
+  }
+
   tabs.forEach(tab => {
     tab.addEventListener('click', function() {
+      activateTab(this);
+    });
+
+    // Keyboard navigation for tabs (WCAG tab pattern)
+    tab.addEventListener('keydown', function(e) {
       const cardId = this.dataset.card;
-      const tabName = this.dataset.tab;
+      const tablist = this.closest('.ingredient-card__tabs');
+      const cardTabs = Array.from(tablist.querySelectorAll('.ingredient-card__tab'));
+      const currentIndex = cardTabs.indexOf(this);
+      let newIndex;
 
-      // Update tabs for this card (and its clones)
-      section.querySelectorAll(`.ingredient-card__tab[data-card="${cardId}"]`).forEach(t => {
-        t.classList.remove('is-active');
-        t.setAttribute('aria-selected', 'false');
-      });
-      // Activate all matching tabs (original + clones)
-      section.querySelectorAll(`.ingredient-card__tab[data-tab="${tabName}"][data-card="${cardId}"]`).forEach(t => {
-        t.classList.add('is-active');
-        t.setAttribute('aria-selected', 'true');
-      });
+      switch (e.key) {
+        case 'ArrowRight':
+        case 'ArrowDown':
+          e.preventDefault();
+          newIndex = (currentIndex + 1) % cardTabs.length;
+          cardTabs[newIndex].focus();
+          activateTab(cardTabs[newIndex]);
+          break;
+        case 'ArrowLeft':
+        case 'ArrowUp':
+          e.preventDefault();
+          newIndex = (currentIndex - 1 + cardTabs.length) % cardTabs.length;
+          cardTabs[newIndex].focus();
+          activateTab(cardTabs[newIndex]);
+          break;
+        case 'Home':
+          e.preventDefault();
+          cardTabs[0].focus();
+          activateTab(cardTabs[0]);
+          break;
+        case 'End':
+          e.preventDefault();
+          cardTabs[cardTabs.length - 1].focus();
+          activateTab(cardTabs[cardTabs.length - 1]);
+          break;
+      }
+    });
+  });
 
-      // Update panels for this card (and clones)
-      section.querySelectorAll(`.tab-panel[data-card="${cardId}"]`).forEach(p => {
-        p.classList.remove('is-active');
-      });
-      section.querySelectorAll(`.tab-panel[data-panel="${tabName}"][data-card="${cardId}"]`).forEach(p => {
-        p.classList.add('is-active');
-
-        // Re-trigger animations
-        const animatedItems = p.querySelectorAll('[style*="animation-delay"]');
-        animatedItems.forEach(item => {
-          item.style.animation = 'none';
-          item.offsetHeight;
-          item.style.animation = '';
-        });
-      });
+  // Set initial tabindex state for tabs
+  section.querySelectorAll('.ingredient-card__tabs').forEach(tablist => {
+    const cardTabs = tablist.querySelectorAll('.ingredient-card__tab');
+    cardTabs.forEach(tab => {
+      tab.setAttribute('tabindex', tab.classList.contains('is-active') ? '0' : '-1');
     });
   });
 
